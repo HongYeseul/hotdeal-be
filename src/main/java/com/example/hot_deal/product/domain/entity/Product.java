@@ -29,4 +29,12 @@ public class Product extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long stockQuantity;
+
+    public boolean decreaseQuantity() {
+        if (this.stockQuantity <= 0) {
+            return false;
+        }
+        this.stockQuantity--;
+        return true;
+    }
 }
