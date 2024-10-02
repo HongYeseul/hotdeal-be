@@ -7,11 +7,24 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class ProductCountRepository {
+    private static final String KEY_PREFIX = "product:count:";
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public Long decrement(String productId) {
-        return redisTemplate.opsForValue().decrement(productId);
+    public void decrement(String productId, String initialStock) {
+        String key = KEY_PREFIX + productId;
+        String stock = redisTemplate.opsForValue().get(key);
+        if (stock == null) {
+            redisTemplate.opsForValue().set(key, initialStock);
+            stock = initialStock;
+        }
+
+        long currentStock = Long.parseLong(stock);
+        if (currentStock <= 0) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+
+        redisTemplate.opsForValue().decrement(key);
     }
 
     public Long getStock(String productId) {

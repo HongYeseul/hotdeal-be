@@ -28,17 +28,10 @@ public class OrderService {
         User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
         Product product = productRepository.findById(orderId).orElseThrow(RuntimeException::new);
 
-        String productKey = product.getId().toString();
-        Long stock = productCountRepository.getStock(productKey);
-        if (stock == null) {
-            productCountRepository.setStock(productKey, product.getStockQuantity());
-        }
+        productCountRepository.decrement(product.getId().toString(), product.getStockQuantity().toString());
 
-        // 레디스에서 재고 감소
-        Long decrementedStock = productCountRepository.decrement(product.getId().toString());
-        if (decrementedStock == null || decrementedStock < 0) {
-            throw new IllegalArgumentException("재고는 0개 미만이 될 수 없습니다.");
-        }
+        product.decreaseQuantity();
+        productRepository.save(product);
 
         orderRepository.save(Order.builder()
                 .user(user)
