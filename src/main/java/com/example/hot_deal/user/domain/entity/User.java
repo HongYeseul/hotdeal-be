@@ -21,7 +21,6 @@ import java.util.UUID;
 @Table(name = "users")
 public class User extends BaseTimeEntity {
 
-    @Id
     private UUID uuid;
 
     @Column(nullable = false)
