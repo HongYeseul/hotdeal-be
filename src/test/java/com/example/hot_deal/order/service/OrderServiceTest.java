@@ -29,6 +29,7 @@ class OrderServiceTest {
     private static final String TEST_PRODUCT_NAME = "PRODUCT";
     private static final BigDecimal TEST_PRODUCT_PRICE = BigDecimal.TEN;
     private static final Long TEST_PRODUCT_STOCK = 100L;
+    private static final String KEY_PREFIX = "product:count:";
 
     @Autowired
     private OrderService orderService;
@@ -48,7 +49,6 @@ class OrderServiceTest {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-
     private Long userId;
     private Long productId;
 
@@ -57,12 +57,12 @@ class OrderServiceTest {
         User user = createTestUser();
         userRepository.save(user);
         userId = user.getId();
-
+    
         Product product = createTestProduct();
         productRepository.save(product);
         productId = product.getId();
-
-        redisTemplate.opsForValue().set(productId.toString(), TEST_PRODUCT_STOCK.toString());
+    
+        redisTemplate.opsForValue().set(KEY_PREFIX + productId.toString(), TEST_PRODUCT_STOCK.toString());
     }
 
     private User createTestUser() {
@@ -94,8 +94,13 @@ class OrderServiceTest {
         orderService.orderProduct(userId, productId);
 
         // Then
-        assertEquals(99L, Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(productId.toString()))));
+        String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + productId.toString());
+        assertNotNull(stockStr, "재고가 null입니다.");
+        assertEquals(99L, Long.parseLong(stockStr));
         assertEquals(1, orderRepository.count());
+
+        Product updatedProduct = productRepository.findById(productId).orElseThrow();
+        assertEquals(99L, updatedProduct.getStockQuantity());
     }
 
     @Test
@@ -109,7 +114,7 @@ class OrderServiceTest {
         orderService.orderProduct(user.getId(), product.getId());
 
         // Then
-        assertEquals(initialStock - 1, Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(product.getId().toString()))));
+        assertEquals(initialStock - 1, Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(KEY_PREFIX + product.getId().toString()))));
 
         List<Order> orders = orderRepository.findAll();
         assertEquals(1, orders.size());
