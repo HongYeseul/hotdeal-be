@@ -3,10 +3,10 @@ package com.example.hot_deal.order.service;
 import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
-import com.example.hot_deal.product.domain.repository.ProductCountRepository;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
 import com.example.hot_deal.user.domain.entity.User;
 import com.example.hot_deal.user.domain.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 class OrderServiceTest {
 
@@ -84,6 +89,53 @@ class OrderServiceTest {
         productRepository.deleteAll();
         userRepository.deleteAll();
         redisTemplate.delete(productId.toString());
+    }
+
+    @Test
+    public void 동시에_100개의_구매_요청() throws InterruptedException {
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    orderService.orderProduct(userId, productId);
+                } catch (Exception e) {
+                    log.error("주문 처리 중 오류 발생: {}", e.getMessage());
+                    System.err.println("주문 처리 중 오류 발생: " + e.getMessage());
+                } finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+
+        countDownLatch.await();
+
+        executorService.shutdown();
+        if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+            log.error("ExecutorService가 제한 시간 내에 종료되지 않았습니다.");
+        }
+
+        // Redis 재고 확인
+        String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + productId.toString());
+        assertNotNull(stockStr, "Redis의 재고가 null입니다.");
+        long redisStock = Long.parseLong(stockStr);
+        
+        // DB 재고 확인
+        Product updatedProduct = productRepository.findById(productId).orElseThrow();
+        long dbStock = updatedProduct.getStockQuantity();
+        
+        // 주문 수 확인
+        long orderCount = orderRepository.count();
+
+        log.info("Redis 재고: {}", redisStock);
+        log.info("DB 재고: {}", dbStock);
+        log.info("주문 수: {}", orderCount);
+
+        assertEquals(0L, redisStock, "Redis 재고가 0이 아닙니다.");
+        assertEquals(0L, dbStock, "DB 재고가 0이 아닙니다.");
+        assertEquals(100L, orderCount, "주문 수가 100개가 아닙니다.");
     }
 
     @Test
