@@ -11,7 +11,7 @@ public class ProductCountRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void decrement(String productId, String initialStock) {
+    public Long decrement(String productId, String initialStock) {
         String key = KEY_PREFIX + productId;
         String stock = redisTemplate.opsForValue().get(key);
         if (stock == null) {
@@ -24,7 +24,7 @@ public class ProductCountRepository {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
 
-        redisTemplate.opsForValue().decrement(key);
+        return redisTemplate.opsForValue().decrement(key);
     }
 
     public Long getStock(String productId) {
@@ -32,7 +32,12 @@ public class ProductCountRepository {
         return stock != null ? Long.parseLong(stock) : null;
     }
 
-    public void setStock(String productId, Long stock) {
-        redisTemplate.opsForValue().set(productId, stock.toString());
+    public Long setStockIfNotExists(String productId, Long stock) {
+        Boolean wasAbsent = redisTemplate.opsForValue().setIfAbsent(productId, stock.toString());
+        if (Boolean.TRUE.equals(wasAbsent)) {
+            return stock;
+        } else {
+            return getStock(productId);
+        }
     }
 }
