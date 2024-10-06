@@ -3,10 +3,10 @@ package com.example.hot_deal.order.service;
 import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
-import com.example.hot_deal.product.domain.repository.ProductCountRepository;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
 import com.example.hot_deal.user.domain.entity.User;
 import com.example.hot_deal.user.domain.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 class OrderServiceTest {
 
@@ -101,6 +102,7 @@ class OrderServiceTest {
                 try {
                     orderService.orderProduct(userId, productId);
                 } catch (Exception e) {
+                    log.error("주문 처리 중 오류 발생: {}", e.getMessage());
                     System.err.println("주문 처리 중 오류 발생: " + e.getMessage());
                 } finally {
                     countDownLatch.countDown();
@@ -112,7 +114,7 @@ class OrderServiceTest {
 
         executorService.shutdown();
         if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-            System.err.println("ExecutorService가 제한 시간 내에 종료되지 않았습니다.");
+            log.error("ExecutorService가 제한 시간 내에 종료되지 않았습니다.");
         }
 
         // Redis 재고 확인
@@ -127,9 +129,9 @@ class OrderServiceTest {
         // 주문 수 확인
         long orderCount = orderRepository.count();
 
-        System.out.println("Redis 재고: " + redisStock);
-        System.out.println("DB 재고: " + dbStock);
-        System.out.println("주문 수: " + orderCount);
+        log.info("Redis 재고: {}", redisStock);
+        log.info("DB 재고: {}", dbStock);
+        log.info("주문 수: {}", orderCount);
 
         assertEquals(0L, redisStock, "Redis 재고가 0이 아닙니다.");
         assertEquals(0L, dbStock, "DB 재고가 0이 아닙니다.");
