@@ -28,12 +28,14 @@ public class ProductCountRepository {
     }
 
     public Long getStock(String productId) {
-        String stock = redisTemplate.opsForValue().get(productId);
+        String key = KEY_PREFIX + productId;
+        String stock = redisTemplate.opsForValue().get(key);
         return stock != null ? Long.parseLong(stock) : null;
     }
 
     public Long setStockIfNotExists(String productId, Long stock) {
-        Boolean wasAbsent = redisTemplate.opsForValue().setIfAbsent(productId, stock.toString());
+        String key = KEY_PREFIX + productId;
+        Boolean wasAbsent = redisTemplate.opsForValue().setIfAbsent(key, stock.toString());
         if (Boolean.TRUE.equals(wasAbsent)) {
             return stock;
         } else {
