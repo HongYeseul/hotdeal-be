@@ -3,6 +3,7 @@ package com.example.hot_deal.order.service;
 import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
+import com.example.hot_deal.product.domain.repository.ProductCountRepository;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
 import com.example.hot_deal.user.domain.entity.User;
 import com.example.hot_deal.user.domain.repository.UserRepository;
@@ -11,9 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +29,7 @@ class OrderServiceTest {
     private static final String TEST_PRODUCT_NAME = "PRODUCT";
     private static final BigDecimal TEST_PRODUCT_PRICE = BigDecimal.TEN;
     private static final Long TEST_PRODUCT_STOCK = 100L;
+    private static final String KEY_PREFIX = "product:count:";
 
     @Autowired
     private OrderService orderService;
@@ -39,6 +43,9 @@ class OrderServiceTest {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     private Long userId;
     private Long productId;
 
@@ -46,9 +53,13 @@ class OrderServiceTest {
     void setUp() {
         User user = createTestUser();
         userRepository.save(user);
-
+        userId = user.getId();
+    
         Product product = createTestProduct();
         productRepository.save(product);
+        productId = product.getId();
+    
+        redisTemplate.opsForValue().set(KEY_PREFIX + productId.toString(), TEST_PRODUCT_STOCK.toString());
     }
 
     private User createTestUser() {
@@ -72,16 +83,21 @@ class OrderServiceTest {
         orderRepository.deleteAll();
         productRepository.deleteAll();
         userRepository.deleteAll();
+        redisTemplate.delete(productId.toString());
     }
 
     @Test
     public void 한번_구매() {
-        orderService.orderProduct(1L, 1L);
+        orderService.orderProduct(userId, productId);
 
         // Then
-        Product product = productRepository.findById(1L).orElseThrow();
-        assertEquals(99L, product.getStockQuantity());
+        String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + productId.toString());
+        assertNotNull(stockStr, "재고가 null입니다.");
+        assertEquals(99L, Long.parseLong(stockStr));
         assertEquals(1, orderRepository.count());
+
+        Product updatedProduct = productRepository.findById(productId).orElseThrow();
+        assertEquals(99L, updatedProduct.getStockQuantity());
     }
 
     @Test
@@ -95,8 +111,7 @@ class OrderServiceTest {
         orderService.orderProduct(user.getId(), product.getId());
 
         // Then
-        Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(initialStock - 1, updatedProduct.getStockQuantity());
+        assertEquals(initialStock - 1, Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(KEY_PREFIX + product.getId().toString()))));
 
         List<Order> orders = orderRepository.findAll();
         assertEquals(1, orders.size());
