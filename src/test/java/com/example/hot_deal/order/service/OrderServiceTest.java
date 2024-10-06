@@ -17,6 +17,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,6 +88,52 @@ class OrderServiceTest {
         productRepository.deleteAll();
         userRepository.deleteAll();
         redisTemplate.delete(productId.toString());
+    }
+
+    @Test
+    public void 동시에_100개의_구매_요청() throws InterruptedException {
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    orderService.orderProduct(userId, productId);
+                } catch (Exception e) {
+                    System.err.println("주문 처리 중 오류 발생: " + e.getMessage());
+                } finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+
+        countDownLatch.await();
+
+        executorService.shutdown();
+        if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+            System.err.println("ExecutorService가 제한 시간 내에 종료되지 않았습니다.");
+        }
+
+        // Redis 재고 확인
+        String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + productId.toString());
+        assertNotNull(stockStr, "Redis의 재고가 null입니다.");
+        long redisStock = Long.parseLong(stockStr);
+        
+        // DB 재고 확인
+        Product updatedProduct = productRepository.findById(productId).orElseThrow();
+        long dbStock = updatedProduct.getStockQuantity();
+        
+        // 주문 수 확인
+        long orderCount = orderRepository.count();
+
+        System.out.println("Redis 재고: " + redisStock);
+        System.out.println("DB 재고: " + dbStock);
+        System.out.println("주문 수: " + orderCount);
+
+        assertEquals(0L, redisStock, "Redis 재고가 0이 아닙니다.");
+        assertEquals(0L, dbStock, "DB 재고가 0이 아닙니다.");
+        assertEquals(100L, orderCount, "주문 수가 100개가 아닙니다.");
     }
 
     @Test
