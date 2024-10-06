@@ -29,11 +29,7 @@ public class OrderService {
         Product product = productRepository.findById(orderId).orElseThrow(RuntimeException::new);
 
         String productKey = product.getId().toString();
-        long remainingStock = productCountRepository.decrement(productKey, product.getStockQuantity().toString());
-
-        if (remainingStock < 0) {
-            throw new IllegalStateException("재고가 부족합니다.");
-        }
+        productCountRepository.decrement(productKey, product.getStockQuantity().toString());
 
         product.decreaseQuantity();
         productRepository.save(product);

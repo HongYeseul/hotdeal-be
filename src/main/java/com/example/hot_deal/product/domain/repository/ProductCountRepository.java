@@ -18,8 +18,8 @@ public class ProductCountRepository {
         return operation.apply(key);
     }
 
-    public Long decrement(String productId, String initialStock) {
-        return executeWithKey(productId, key -> {
+    public void decrement(String productId, String initialStock) {
+        executeWithKey(productId, key -> {
             String stock = redisTemplate.opsForValue().get(key);
             if (stock == null) {
                 redisTemplate.opsForValue().set(key, initialStock);
@@ -31,7 +31,8 @@ public class ProductCountRepository {
                 throw new IllegalArgumentException("재고가 부족합니다.");
             }
 
-            return redisTemplate.opsForValue().decrement(key);
+            redisTemplate.opsForValue().decrement(key);
+            return null;
         });
     }
 
@@ -39,6 +40,17 @@ public class ProductCountRepository {
         return executeWithKey(productId, key -> {
             String stock = redisTemplate.opsForValue().get(key);
             return stock != null ? Long.parseLong(stock) : null;
+        });
+    }
+
+    public Long getOrSetStock(String productId, Long stock) {
+        return executeWithKey(productId, key -> {
+            String result = redisTemplate.opsForValue().get(key);
+            if (result == null) {
+                redisTemplate.opsForValue().set(key, stock.toString());
+                return stock;
+            }
+            return Long.parseLong(result);
         });
     }
 
