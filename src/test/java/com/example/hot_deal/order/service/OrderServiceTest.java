@@ -44,9 +44,6 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @Autowired
-    private ProductCountRepository productCountRepository;
-
-    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     private Long userId;
