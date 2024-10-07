@@ -20,7 +20,7 @@ public class PurchasedUserOrderConsumer {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @KafkaListener(topics = "applied-users", groupId = "order-group")
