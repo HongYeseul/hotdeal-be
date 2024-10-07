@@ -23,16 +23,18 @@ public class ProductCountRepository {
     }
 
     public Long decrement(String productId, String initialStock) {
-        String script = "local stock = redis.call('GET', KEYS[1]) " +
-                "if not stock then " +
-                "  redis.call('SET', KEYS[1], ARGV[1]) " +
-                "  stock = ARGV[1] " +
-                "end " +
-                "if tonumber(stock) <= 0 then " +
-                "  return -1 " +
-                "end " +
-                "redis.call('DECR', KEYS[1]) " +
-                "return tonumber(stock) - 1";
+        String script = """
+            local stock = redis.call('GET', KEYS[1])
+            if not stock then
+              redis.call('SET', KEYS[1], ARGV[1])
+              stock = ARGV[1]
+            end
+            if tonumber(stock) <= 0 then
+              return -1
+            end
+            redis.call('DECR', KEYS[1])
+            return tonumber(stock) - 1
+            """;
 
         Long result = redisTemplate.execute((RedisCallback<Long>) connection ->
                 connection.eval(script.getBytes(), ReturnType.INTEGER, 1,
