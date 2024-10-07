@@ -103,7 +103,6 @@ class OrderServiceTest {
                     orderService.orderProduct(userId, productId);
                 } catch (Exception e) {
                     log.error("주문 처리 중 오류 발생: {}", e.getMessage());
-                    System.err.println("주문 처리 중 오류 발생: " + e.getMessage());
                 } finally {
                     countDownLatch.countDown();
                 }
@@ -111,6 +110,8 @@ class OrderServiceTest {
         }
 
         countDownLatch.await();
+
+        Thread.sleep(5000);
 
         executorService.shutdown();
         if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
@@ -139,11 +140,14 @@ class OrderServiceTest {
     }
 
     @Test
-    public void 한번_구매() {
+    public void 한번_구매() throws InterruptedException {
         orderService.orderProduct(userId, productId);
 
         // Then
         String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + productId.toString());
+
+        Thread.sleep(3000);
+
         assertNotNull(stockStr, "재고가 null입니다.");
         assertEquals(99L, Long.parseLong(stockStr));
         assertEquals(1, orderRepository.count());
@@ -153,7 +157,7 @@ class OrderServiceTest {
     }
 
     @Test
-    public void 상품_주문시_재고가_감소하고_주문이_생성된다() {
+    public void 상품_주문시_재고가_감소하고_주문이_생성된다() throws InterruptedException {
         // Given
         User user = userRepository.findAll().get(0);
         Product product = productRepository.findAll().get(0);
@@ -161,6 +165,7 @@ class OrderServiceTest {
 
         // When
         orderService.orderProduct(user.getId(), product.getId());
+        Thread.sleep(3000);
 
         // Then
         assertEquals(initialStock - 1, Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(KEY_PREFIX + product.getId().toString()))));
