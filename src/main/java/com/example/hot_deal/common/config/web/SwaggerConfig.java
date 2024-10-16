@@ -1,4 +1,4 @@
-package com.example.hot_deal.common.config;
+package com.example.hot_deal.common.config.web;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;

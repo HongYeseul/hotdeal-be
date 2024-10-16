@@ -1,4 +1,4 @@
-package com.example.hot_deal.common.config;
+package com.example.hot_deal.common.config.web;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.example.hot_deal.common.config;
+package com.example.hot_deal.common.config.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

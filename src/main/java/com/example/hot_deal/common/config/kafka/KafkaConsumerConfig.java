@@ -1,4 +1,4 @@
-package com.example.hot_deal.common.config;
+package com.example.hot_deal.common.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
