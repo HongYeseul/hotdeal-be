@@ -1,5 +1,6 @@
-package com.example.hot_deal.common.config;
+package com.example.hot_deal.common.config.auth;
 
+import com.example.hot_deal.common.exception.handler.ExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +16,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
 
-import static com.example.hot_deal.common.config.WebConfig.API_V1;
+import static com.example.hot_deal.common.config.web.WebConfig.API_V1;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final ExceptionHandlerFilter exceptionHandlingFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -28,7 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 API_V1 + "/product/**",
-                                "/member/**",
+                                API_V1 + "/users/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**")
                         .permitAll()
