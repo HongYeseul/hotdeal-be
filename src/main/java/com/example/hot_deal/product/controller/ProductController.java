@@ -2,7 +2,10 @@ package com.example.hot_deal.product.controller;
 
 import com.example.hot_deal.product.dto.ProductDTO;
 import com.example.hot_deal.product.service.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +21,11 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getProducts() {
-        return ResponseEntity.ok(productService.getProducts());
+    public ResponseEntity<Page<ProductDTO>> getProducts(
+            @Parameter(hidden = true) Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                productService.getProducts(pageable)
+        );
     }
 }

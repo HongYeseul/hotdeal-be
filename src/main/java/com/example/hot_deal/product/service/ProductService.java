@@ -4,9 +4,9 @@ import com.example.hot_deal.product.domain.repository.ProductRepository;
 import com.example.hot_deal.product.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -15,9 +15,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-
-    public List<ProductDTO> getProducts() {
-        return productRepository.findAll().stream()
-                .map(ProductDTO::new).toList();
+    public Page<ProductDTO> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductDTO::new);
     }
 }
