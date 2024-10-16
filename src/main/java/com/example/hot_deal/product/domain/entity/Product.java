@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,6 +30,9 @@ public class Product extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long stockQuantity;
+
+    @Column(nullable = false)
+    private LocalDateTime openTime;
 
     public boolean decreaseQuantity() {
         if (this.stockQuantity <= 0) {
