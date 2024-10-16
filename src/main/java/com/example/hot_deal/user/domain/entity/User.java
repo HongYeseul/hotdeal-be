@@ -3,7 +3,6 @@ package com.example.hot_deal.user.domain.entity;
 import com.example.hot_deal.common.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,4 +31,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    public static User createWithEncodedPassword(UUID uuid, String name, String email, String password) {
+        return User.builder()
+                .uuid(uuid)
+                .name(name)
+                .email(email)
+                .passwordHash(password)
+                .build();
+    }
 }
