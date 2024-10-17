@@ -1,7 +1,7 @@
 package com.example.hot_deal.user.dto.base;
 
-import com.example.hot_deal.common.util.validation.annotaion.ValidEmail;
-import com.example.hot_deal.common.util.validation.annotaion.ValidName;
+import com.example.hot_deal.common.util.validation.annotation.ValidEmail;
+import com.example.hot_deal.common.util.validation.annotation.ValidName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.example.hot_deal.common.util.validation.annotaion;
+package com.example.hot_deal.common.util.validation.annotation;
 
 import com.example.hot_deal.common.util.validation.validator.NameValidator;
 import io.swagger.v3.oas.annotations.media.Schema;

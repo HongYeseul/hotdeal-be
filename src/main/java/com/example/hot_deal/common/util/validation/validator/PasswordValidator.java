@@ -1,6 +1,6 @@
 package com.example.hot_deal.common.util.validation.validator;
 
-import com.example.hot_deal.common.util.validation.annotaion.ValidPassword;
+import com.example.hot_deal.common.util.validation.annotation.ValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
