@@ -1,6 +1,6 @@
 package com.example.hot_deal.product.controller;
 
-import com.example.hot_deal.common.config.ApiV1;
+import com.example.hot_deal.common.config.web.ApiV1;
 import com.example.hot_deal.common.domain.PageResponse;
 import com.example.hot_deal.product.dto.ProductDTO;
 import com.example.hot_deal.product.service.ProductService;
