@@ -31,12 +31,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    public static User createWithEncodedPassword(UUID uuid, String name, String email, String password) {
+    public static User create(UUID uuid, String name, String email, String encodedPassword) {
         return User.builder()
                 .uuid(uuid)
                 .name(name)
                 .email(email)
-                .passwordHash(password)
+                .passwordHash(encodedPassword)
                 .build();
     }
 }
