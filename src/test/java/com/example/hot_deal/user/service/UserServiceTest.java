@@ -8,7 +8,7 @@ import com.example.hot_deal.user.dto.RegisterResponse;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,19 +36,13 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    private FixtureMonkey fixtureMonkey;
+    private static FixtureMonkey fixtureMonkey;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         fixtureMonkey = FixtureMonkey.builder()
                 .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
                 .build();
-    }
-
-    @Test
-    void testMonkey() {
-        RegisterRequest request = fixtureMonkey.giveMeOne(RegisterRequest.class);
-        log.info(request.getEmail());
     }
 
     @Test
