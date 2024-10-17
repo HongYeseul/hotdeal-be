@@ -1,6 +1,6 @@
 package com.example.hot_deal.user.dto;
 
-import com.example.hot_deal.common.util.validation.annotaion.ValidPassword;
+import com.example.hot_deal.common.util.validation.annotation.ValidPassword;
 import com.example.hot_deal.user.dto.base.BaseUserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Getter;
 public class RegisterRequest extends BaseUserDTO {
 
     @ValidPassword
-    String rawPassword;
+    private String rawPassword;
 
     public RegisterRequest(String email, String name, String rawPassword) {
         super(email, name);
