@@ -1,7 +1,6 @@
 package com.example.hot_deal.user.service;
 
 import com.example.hot_deal.common.exception.HotDealException;
-import com.example.hot_deal.common.exception.code.ErrorCode;
 import com.example.hot_deal.user.domain.entity.User;
 import com.example.hot_deal.user.domain.repository.UserRepository;
 import com.example.hot_deal.user.dto.RegisterRequest;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.example.hot_deal.common.exception.code.UserErrorCode.DUPLICATE_LOGIN_ID;
+import static com.example.hot_deal.common.exception.code.UserErrorCode.DUPLICATE_EMAIL;
 
 @Slf4j
 @Service
@@ -32,7 +31,7 @@ public class UserService {
         log.info("Attempting to register user with email: {}", registerRequest.getEmail());
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             log.warn("Registration failed: Email already exists - {}", registerRequest.getEmail());
-            throw new HotDealException(DUPLICATE_LOGIN_ID);
+            throw new HotDealException(DUPLICATE_EMAIL);
         }
 
         User user = User.create(

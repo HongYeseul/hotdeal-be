@@ -29,7 +29,7 @@ public enum UserErrorCode implements ErrorCode{
     USER_NOT_FOUND(NOT_FOUND, "사용자를 찾을 수 없습니다."),
 
     // 409 - 리소스 충돌 (Conflict)
-    DUPLICATE_LOGIN_ID(CONFLICT, "중복된 로그인 아이디(이메일)가 존재합니다.");
+    DUPLICATE_EMAIL(CONFLICT, "중복된 로그인 아이디(이메일)가 존재합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
