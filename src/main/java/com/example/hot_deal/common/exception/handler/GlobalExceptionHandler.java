@@ -25,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(HotDealException.class)
     public ResponseEntity<ProblemDetail> handleHotDealException(HotDealException hotDealException) {
-        log.warn("[HotDealException] {}가 발생했습니다.", hotDealException.getClass().getName(), hotDealException);
+        log.warn("[HotDealException] {}가 발생했습니다.", hotDealException.getMessage(), hotDealException);
         return ResponseEntity.status(hotDealException.getErrorCode().getHttpStatus())
                 .body(ProblemDetail.forStatusAndDetail(
                         hotDealException.getErrorCode().getHttpStatus(),
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
 
-        log.warn("[MethodArgumentNotValidException] {}가 발생했습니다.", errorMessages.getClass().getName());
+        log.warn("[MethodArgumentNotValidException] {}가 발생했습니다.", errorMessages);
         log.warn("Full exception details:", exception);
 
         return ResponseEntity.badRequest()
