@@ -49,15 +49,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Long getId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(ID, Long.class);
-    }
-
-    public String getType(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                .get(TYPE, String.class);
-    }
-
     public void validateToken(String token, TokenType tokenType) throws HotDealException {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
@@ -82,5 +73,14 @@ public class JwtProvider {
         if (type == null || !type.equals(tokenType.name())) {
             throw new HotDealException(TOKEN_TYPE_INVALID);
         }
+    }
+
+    public String getType(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                .get(TYPE, String.class);
+    }
+
+    public Long getId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(ID, Long.class);
     }
 }
