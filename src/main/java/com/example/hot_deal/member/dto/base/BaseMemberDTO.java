@@ -1,4 +1,4 @@
-package com.example.hot_deal.user.dto.base;
+package com.example.hot_deal.member.dto.base;
 
 import com.example.hot_deal.common.util.validation.annotation.ValidEmail;
 import com.example.hot_deal.common.util.validation.annotation.ValidName;
@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Schema(description = "회원 기본 정보")
-public class BaseUserDTO {
+public class BaseMemberDTO {
     @ValidEmail
     private final String email;
 

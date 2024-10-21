@@ -2,7 +2,7 @@ package com.example.hot_deal.order.domain.entity;
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
 import com.example.hot_deal.product.domain.entity.Product;
-import com.example.hot_deal.user.domain.entity.User;
+import com.example.hot_deal.member.domain.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Order extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

@@ -4,8 +4,8 @@ import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
-import com.example.hot_deal.user.domain.entity.User;
-import com.example.hot_deal.user.domain.repository.UserRepository;
+import com.example.hot_deal.member.domain.entity.Member;
+import com.example.hot_deal.member.domain.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PurchasedUserOrderConsumer {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -30,10 +30,10 @@ public class PurchasedUserOrderConsumer {
             throw new IllegalArgumentException("잘못된 메시지 형식입니다.");
         }
 
-        Long userId = Long.parseLong(parts[0]);
+        Long memberId = Long.parseLong(parts[0]);
         Long productId = Long.parseLong(parts[1]);
         
-        User user = userRepository.getUserById(userId);
+        Member member = memberRepository.getUserById(memberId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
 
@@ -41,10 +41,10 @@ public class PurchasedUserOrderConsumer {
         productRepository.save(product);
 
         orderRepository.save(Order.builder()
-                .user(user)
+                .member(member)
                 .product(product)
                 .build());
 
-        log.info("사용자 {}의 주문이 DB에 저장되었습니다.", userId);
+        log.info("사용자 {}의 주문이 DB에 저장되었습니다.", memberId);
     }
 }

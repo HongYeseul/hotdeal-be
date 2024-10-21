@@ -3,19 +3,19 @@ package com.example.hot_deal.auth.service;
 import com.example.hot_deal.auth.dto.LoginRequest;
 import com.example.hot_deal.auth.dto.LoginResponse;
 import com.example.hot_deal.common.exception.HotDealException;
-import com.example.hot_deal.user.domain.entity.User;
-import com.example.hot_deal.user.domain.repository.UserRepository;
+import com.example.hot_deal.member.domain.entity.Member;
+import com.example.hot_deal.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.example.hot_deal.common.exception.code.UserErrorCode.INCORRECT_PASSWORD;
+import static com.example.hot_deal.common.exception.code.MemberErrorCode.INCORRECT_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final AuthProvider authProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,14 +23,14 @@ public class AuthService {
      * 로그인
      */
     public LoginResponse login(LoginRequest loginRequest) {
-        User user = getVerifiedUser(loginRequest.loginId(), loginRequest.password());
-        return authProvider.makeToken(user);
+        Member member = getVerifiedUser(loginRequest.loginId(), loginRequest.password());
+        return authProvider.makeToken(member);
     }
 
-    private User getVerifiedUser(String loginId, String password) {
-        User user = userRepository.getUserByEmail(loginId);
-        matchPassword(password, user.getPasswordHash());
-        return user;
+    private Member getVerifiedUser(String loginId, String password) {
+        Member member = memberRepository.getUserByEmail(loginId);
+        matchPassword(password, member.getPasswordHash());
+        return member;
     }
 
     public void matchPassword(String password, String hashedPassword) {
