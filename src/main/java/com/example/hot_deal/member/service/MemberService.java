@@ -29,10 +29,7 @@ public class MemberService {
      */
     public RegisterResponse register(RegisterRequest registerRequest) {
         log.info("Attempting to register member with email: {}", registerRequest.getEmail());
-        if (memberRepository.existsByEmail(registerRequest.getEmail())) {
-            log.warn("Registration failed: Email already exists - {}", registerRequest.getEmail());
-            throw new HotDealException(DUPLICATE_EMAIL);
-        }
+        assertUniqueEmail(registerRequest.getEmail());
 
         Member member = Member.create(
                 UUID.randomUUID(),
@@ -44,5 +41,11 @@ public class MemberService {
         memberRepository.save(member);
         log.info("Member registered successfully: {}", member.getEmail());
         return registerRequest.toResponse();
+    }
+
+    private void assertUniqueEmail(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new HotDealException(DUPLICATE_EMAIL);
+        }
     }
 }
