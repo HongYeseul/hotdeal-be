@@ -12,7 +12,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Getter
 @AllArgsConstructor
-public enum UserErrorCode implements ErrorCode{
+public enum MemberErrorCode implements ErrorCode{
 
     // 400 - 잘못된 요청 (Bad Request)
     INCORRECT_PASSWORD(BAD_REQUEST, "입력된 비밀번호가 잘못되었습니다."),
@@ -26,7 +26,7 @@ public enum UserErrorCode implements ErrorCode{
     FEATURE_UNAVAILABLE(FORBIDDEN, "현재 기능을 일시적으로 사용할 수 없습니다."),
 
     // 404 - 리소스를 찾을 수 없음 (Not Found)
-    USER_NOT_FOUND(NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, "사용자를 찾을 수 없습니다."),
 
     // 409 - 리소스 충돌 (Conflict)
     DUPLICATE_EMAIL(CONFLICT, "중복된 로그인 아이디(이메일)가 존재합니다.");

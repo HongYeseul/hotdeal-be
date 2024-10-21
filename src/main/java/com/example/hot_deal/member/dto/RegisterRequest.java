@@ -1,13 +1,13 @@
-package com.example.hot_deal.user.dto;
+package com.example.hot_deal.member.dto;
 
 import com.example.hot_deal.common.util.validation.annotation.ValidPassword;
-import com.example.hot_deal.user.dto.base.BaseUserDTO;
+import com.example.hot_deal.member.dto.base.BaseMemberDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
 @Schema(description = "회원가입 요청")
-public class RegisterRequest extends BaseUserDTO {
+public class RegisterRequest extends BaseMemberDTO {
 
     @ValidPassword
     private String rawPassword;

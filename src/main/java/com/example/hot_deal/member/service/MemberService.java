@@ -1,10 +1,10 @@
-package com.example.hot_deal.user.service;
+package com.example.hot_deal.member.service;
 
 import com.example.hot_deal.common.exception.HotDealException;
-import com.example.hot_deal.user.domain.entity.User;
-import com.example.hot_deal.user.domain.repository.UserRepository;
-import com.example.hot_deal.user.dto.RegisterRequest;
-import com.example.hot_deal.user.dto.RegisterResponse;
+import com.example.hot_deal.member.domain.entity.Member;
+import com.example.hot_deal.member.domain.repository.MemberRepository;
+import com.example.hot_deal.member.dto.RegisterRequest;
+import com.example.hot_deal.member.dto.RegisterResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,36 +13,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.example.hot_deal.common.exception.code.UserErrorCode.DUPLICATE_EMAIL;
+import static com.example.hot_deal.common.exception.code.MemberErrorCode.DUPLICATE_EMAIL;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원 가입
      */
     public RegisterResponse register(RegisterRequest registerRequest) {
-        log.info("Attempting to register user with email: {}", registerRequest.getEmail());
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+        log.info("Attempting to register member with email: {}", registerRequest.getEmail());
+        if (memberRepository.existsByEmail(registerRequest.getEmail())) {
             log.warn("Registration failed: Email already exists - {}", registerRequest.getEmail());
             throw new HotDealException(DUPLICATE_EMAIL);
         }
 
-        User user = User.create(
+        Member member = Member.create(
                 UUID.randomUUID(),
                 registerRequest.getName(),
                 registerRequest.getEmail(),
                 passwordEncoder.encode(registerRequest.getRawPassword())
         );
 
-        userRepository.save(user);
-        log.info("User registered successfully: {}", user.getEmail());
+        memberRepository.save(member);
+        log.info("Member registered successfully: {}", member.getEmail());
         return registerRequest.toResponse();
     }
 }

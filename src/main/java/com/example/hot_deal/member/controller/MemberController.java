@@ -1,9 +1,9 @@
-package com.example.hot_deal.user.controller;
+package com.example.hot_deal.member.controller;
 
 import com.example.hot_deal.common.config.web.ApiV1;
-import com.example.hot_deal.user.dto.RegisterRequest;
-import com.example.hot_deal.user.dto.RegisterResponse;
-import com.example.hot_deal.user.service.UserService;
+import com.example.hot_deal.member.dto.RegisterRequest;
+import com.example.hot_deal.member.dto.RegisterResponse;
+import com.example.hot_deal.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,19 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ApiV1
 @Validated
-@Tag(name = "user", description = "회원 API")
+@Tag(name = "member", description = "회원 API")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/member")
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "이메일, 이름, 비밀번호를 입력하여 회원 가입을 한다.")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody final RegisterRequest registerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                userService.register(registerRequest)
+                memberService.register(registerRequest)
         );
     }
 }

@@ -1,9 +1,8 @@
-package com.example.hot_deal.user.domain.entity;
+package com.example.hot_deal.member.domain.entity;
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +16,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "users")
-public class User extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
 
     private UUID uuid;
 
@@ -31,8 +29,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    public static User create(UUID uuid, String name, String email, String encodedPassword) {
-        return User.builder()
+    public static Member create(UUID uuid, String name, String email, String encodedPassword) {
+        return Member.builder()
                 .uuid(uuid)
                 .name(name)
                 .email(email)

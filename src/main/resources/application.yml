@@ -13,3 +13,6 @@ spring:
   sql:
     init:
       mode: always
+security:
+  jwt:
+    secret-key: ${JWT_ACCESS_SECRET_KEY}
