@@ -33,8 +33,7 @@ public class PurchasedUserOrderConsumer {
         Long userId = Long.parseLong(parts[0]);
         Long productId = Long.parseLong(parts[1]);
         
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.getUserById(userId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
 
