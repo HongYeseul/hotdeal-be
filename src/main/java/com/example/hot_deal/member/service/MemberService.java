@@ -5,13 +5,12 @@ import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
 import com.example.hot_deal.member.dto.RegisterRequest;
 import com.example.hot_deal.member.dto.RegisterResponse;
+import com.example.hot_deal.member.dto.base.BaseMemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 import static com.example.hot_deal.member.constants.error.MemberErrorCode.DUPLICATE_EMAIL;
 
@@ -27,12 +26,12 @@ public class MemberService {
     /**
      * 회원 가입
      */
+    @Transactional
     public RegisterResponse register(RegisterRequest registerRequest) {
         log.info("Attempting to register member with email: {}", registerRequest.getEmail());
         assertUniqueEmail(registerRequest.getEmail());
 
         Member member = Member.create(
-                UUID.randomUUID(),
                 registerRequest.getName(),
                 registerRequest.getEmail(),
                 passwordEncoder.encode(registerRequest.getRawPassword())
@@ -47,5 +46,13 @@ public class MemberService {
         if (memberRepository.existsByEmail(email)) {
             throw new HotDealException(DUPLICATE_EMAIL);
         }
+    }
+
+    /**
+     * 회원 정보 조회
+     */
+    public BaseMemberDTO findMemberById(Long id) {
+        Member member = memberRepository.getMemberById(id);
+        return BaseMemberDTO.from(member);
     }
 }
