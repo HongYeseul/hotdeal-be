@@ -1,5 +1,6 @@
-package com.example.hot_deal.common.exception.code;
+package com.example.hot_deal.member.constants.error;
 
+import com.example.hot_deal.common.exception.code.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Getter
 @AllArgsConstructor
-public enum MemberErrorCode implements ErrorCode{
+public enum MemberErrorCode implements ErrorCode {
 
     // 400 - 잘못된 요청 (Bad Request)
     INCORRECT_PASSWORD(BAD_REQUEST, "입력된 비밀번호가 잘못되었습니다."),

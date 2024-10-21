@@ -4,6 +4,8 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     defer-datasource-initialization: true
+  jwt:
+    secret: ${JWT_ACCESS_SECRET_KEY}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3333/hot_deal
@@ -13,6 +15,3 @@ spring:
   sql:
     init:
       mode: always
-security:
-  jwt:
-    secret-key: ${JWT_ACCESS_SECRET_KEY}

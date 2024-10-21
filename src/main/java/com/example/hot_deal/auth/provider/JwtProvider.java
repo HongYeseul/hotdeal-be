@@ -1,4 +1,4 @@
-package com.example.hot_deal.auth.service;
+package com.example.hot_deal.auth.provider;
 
 import com.example.hot_deal.auth.constants.TokenType;
 import com.example.hot_deal.common.exception.HotDealException;
@@ -18,12 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_EXPIRED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_INVALID;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_MALFORMED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_SIGNATURE_FAILED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_TYPE_INVALID;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_UNSUPPORTED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_EXPIRED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_INVALID;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_MALFORMED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_SIGNATURE_FAILED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_TYPE_INVALID;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_UNSUPPORTED;
 
 @Component
 public class JwtProvider {
@@ -47,15 +47,6 @@ public class JwtProvider {
                 .expiration(Date.from(expirationTime))
                 .signWith(secretKey)
                 .compact();
-    }
-
-    public Long getId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(ID, Long.class);
-    }
-
-    public String getType(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                .get(TYPE, String.class);
     }
 
     public void validateToken(String token, TokenType tokenType) throws HotDealException {
@@ -82,5 +73,14 @@ public class JwtProvider {
         if (type == null || !type.equals(tokenType.name())) {
             throw new HotDealException(TOKEN_TYPE_INVALID);
         }
+    }
+
+    public String getType(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                .get(TYPE, String.class);
+    }
+
+    public Long getId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(ID, Long.class);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.hot_deal.auth.exception;
+package com.example.hot_deal.auth.constants.error;
 
 import com.example.hot_deal.common.exception.code.ErrorCode;
 import lombok.AllArgsConstructor;
