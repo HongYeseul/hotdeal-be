@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-import static com.example.hot_deal.common.exception.code.MemberErrorCode.MEMBER_NOT_FOUND;
+import static com.example.hot_deal.member.constants.error.MemberErrorCode.MEMBER_NOT_FOUND;
 
 
 public interface MemberJpaRepository extends MemberRepository, JpaRepository<Member, Long> {

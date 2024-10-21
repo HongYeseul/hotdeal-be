@@ -18,12 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_EXPIRED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_INVALID;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_MALFORMED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_SIGNATURE_FAILED;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_TYPE_INVALID;
-import static com.example.hot_deal.auth.exception.AuthErrorCode.TOKEN_UNSUPPORTED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_EXPIRED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_INVALID;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_MALFORMED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_SIGNATURE_FAILED;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_TYPE_INVALID;
+import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_UNSUPPORTED;
 
 @Component
 public class JwtProvider {

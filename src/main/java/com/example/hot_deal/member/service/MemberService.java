@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.example.hot_deal.common.exception.code.MemberErrorCode.DUPLICATE_EMAIL;
+import static com.example.hot_deal.member.constants.error.MemberErrorCode.DUPLICATE_EMAIL;
 
 @Slf4j
 @Service

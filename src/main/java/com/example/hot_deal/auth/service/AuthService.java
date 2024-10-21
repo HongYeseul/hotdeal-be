@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.example.hot_deal.common.exception.code.MemberErrorCode.INCORRECT_PASSWORD;
+import static com.example.hot_deal.member.constants.error.MemberErrorCode.INCORRECT_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
