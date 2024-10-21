@@ -1,7 +1,6 @@
 package com.example.hot_deal.auth.service;
 
 import com.example.hot_deal.auth.constants.TokenType;
-import com.example.hot_deal.auth.dto.MemberTokens;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -60,9 +59,9 @@ public class JwtProvider {
     }
 
     public void validateToken(String token, TokenType tokenType) throws HotDealException {
-        validateTokenType(token, tokenType);
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            validateTokenType(token, tokenType);
         } catch (ExpiredJwtException e) {
             throw new HotDealException(TOKEN_EXPIRED);
         } catch (UnsupportedJwtException e) {
@@ -80,7 +79,7 @@ public class JwtProvider {
 
     private void validateTokenType(String token, TokenType tokenType) {
         String type = getType(token);
-        if (!type.equals(tokenType.name())) {
+        if (type == null || !type.equals(tokenType.name())) {
             throw new HotDealException(TOKEN_TYPE_INVALID);
         }
     }
