@@ -10,5 +10,5 @@ public interface MemberRepository {
 
     Member getUserByEmail(String s);
 
-    Member getUserById(Long id);
+    Member getMemberById(Long id);
 }

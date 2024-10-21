@@ -2,6 +2,7 @@ package com.example.hot_deal.member.domain.repository;
 
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
         );
     }
 
-    default Member getUserById(Long id) {
+    default Member getMemberById(Long id) {
         return findById(id).orElseThrow(
                 () -> new HotDealException(MEMBER_NOT_FOUND)
         );
