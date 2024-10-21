@@ -1,7 +1,7 @@
 package com.example.hot_deal.auth.service;
 
 import com.example.hot_deal.auth.dto.LoginRequest;
-import com.example.hot_deal.auth.dto.LoginResponse;
+import com.example.hot_deal.auth.dto.MemberTokens;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
@@ -22,7 +22,7 @@ public class AuthService {
     /**
      * 로그인
      */
-    public LoginResponse login(LoginRequest loginRequest) {
+    public MemberTokens login(LoginRequest loginRequest) {
         Member member = getVerifiedUser(loginRequest.loginId(), loginRequest.password());
         return authProvider.makeToken(member);
     }
