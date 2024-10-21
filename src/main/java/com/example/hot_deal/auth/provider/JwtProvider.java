@@ -1,4 +1,4 @@
-package com.example.hot_deal.auth.service;
+package com.example.hot_deal.auth.provider;
 
 import com.example.hot_deal.auth.constants.TokenType;
 import com.example.hot_deal.common.exception.HotDealException;
