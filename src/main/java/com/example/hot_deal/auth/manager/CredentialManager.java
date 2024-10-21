@@ -1,25 +1,24 @@
 package com.example.hot_deal.auth.manager;
 
 import com.example.hot_deal.auth.constants.TokenType;
-import com.example.hot_deal.auth.dto.MemberTokens;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
+import com.example.hot_deal.auth.provider.CookieProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
-import static com.example.hot_deal.auth.constants.TokenType.ACCESS_TOKEN;
-import static com.example.hot_deal.auth.constants.TokenType.REFRESH_TOKEN;
-
 @Component
+@RequiredArgsConstructor
 public class CredentialManager {
 
-    public void setCredential(MemberTokens tokens, HttpServletResponse httpServletResponse) {
-        ResponseCookie responseCookie = addCookieToResponse(tokens.accessToken(), ACCESS_TOKEN);
-        httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
+    private final CookieProvider cookieProvider;
 
-        ResponseCookie refreshToken = addCookieToResponse(tokens.refreshToken(), REFRESH_TOKEN);
-        httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, refreshToken.toString());
-    }
+//    public void setCredential(MemberTokens tokens, HttpServletResponse httpServletResponse) {
+//        ResponseCookie accessTokenCookie = addCookieToResponse(tokens.accessToken(), ACCESS_TOKEN);
+//
+//        httpServletResponse.setHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + accessTokenCookie.toString());
+//        Cookie refreshCookie = cookieProvider.createCookieForToken(tokens.refreshToken(), REFRESH_TOKEN);
+//        httpServletResponse.addCookie(refreshCookie);
+//    }
 
     public ResponseCookie addCookieToResponse(String token, TokenType tokenType) {
         return ResponseCookie.from(tokenType.name(), token)
