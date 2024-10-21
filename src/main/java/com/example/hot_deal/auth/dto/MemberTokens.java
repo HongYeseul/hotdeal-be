@@ -1,6 +1,6 @@
 package com.example.hot_deal.auth.dto;
 
-public record LoginResponse(
+public record MemberTokens(
         String accessToken,
         String refreshToken
 ) { }
