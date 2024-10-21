@@ -1,8 +1,14 @@
 package com.example.hot_deal.user.domain.repository;
 
 import com.example.hot_deal.user.domain.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository {
+
     boolean existsByEmail(String email);
+
+    User save(User user);
+
+    User getUserByEmail(String s);
+
+    User getUserById(Long id);
 }
