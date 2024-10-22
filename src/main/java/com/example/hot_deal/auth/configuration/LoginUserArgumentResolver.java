@@ -30,8 +30,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                               NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(String.valueOf(authentication));
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+        log.info("인증 시도 중인 사용자: {}", authentication.getName());
+        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             throw new HotDealException(AuthErrorCode.LOGIN_REQUIRED);
         }
         Object principal = authentication.getPrincipal();
