@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.example.hot_deal.auth.constants.JwtConstants.AUTHORIZATION_HEADER;
 import static com.example.hot_deal.auth.constants.JwtConstants.BEARER_TOKEN_PREFIX;
@@ -32,14 +33,15 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
-        Cookie cookie = cookieProvider.getCookieByName(request, TokenType.ACCESS_TOKEN.name());
+        Optional<Cookie> cookie = cookieProvider.getCookieByName(request, TokenType.ACCESS_TOKEN.name());
 
         if (authorization != null && authorization.startsWith(BEARER_TOKEN_PREFIX)) {
             String accessToken = authorization.substring(BEARER_TOKEN_PREFIX.length());
             jwtProvider.validateToken(accessToken, TokenType.ACCESS_TOKEN);
             setAuthentication(accessToken);
-        } else if (cookie != null && authorization == null) {
-            String refreshToken = cookie.getValue();
+        } else if (cookie.isPresent() && authorization == null) {
+            // 쿠키가 존재하고 authorization 헤더가 없을 때
+            String refreshToken = cookie.get().getValue();
             jwtProvider.validateToken(refreshToken, TokenType.REFRESH_TOKEN);
             setAuthentication(refreshToken);
         }

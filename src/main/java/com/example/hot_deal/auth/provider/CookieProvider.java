@@ -5,6 +5,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 @Component
 public class CookieProvider {
 
@@ -18,16 +21,14 @@ public class CookieProvider {
     }
 
 
-    public Cookie getCookieByName(HttpServletRequest request, String cookieName) {
+    public Optional<Cookie> getCookieByName(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookieName.equals(cookie.getName())) {
-                    return cookie;
-                }
-            }
+        if (cookies == null) {
+            return Optional.empty();
         }
-        return null;
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookieName.equals(cookie.getName()))
+                .findFirst();
     }
 
     public Cookie expireCookie(String cookieName) {
