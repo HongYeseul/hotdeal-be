@@ -40,7 +40,7 @@ public class MemberFakeRepository implements MemberRepository {
         );
         members.removeIf(member -> Objects.equals(member.getEmail(), entity.getEmail()));
         members.add(newMember);
-        return  newMember;
+        return newMember;
     }
 
     @Override
@@ -57,6 +57,11 @@ public class MemberFakeRepository implements MemberRepository {
                 .filter(member -> Objects.equals(member.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new HotDealException(MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public void deleteAll() {
+        members.clear();
     }
 
     private long getOrGenerateId(Member entity) {
