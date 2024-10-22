@@ -16,7 +16,7 @@ public record LoginRequest (
         @ValidPassword
         @Schema(description = "비밀번호는 영어, 숫자, 특수 문자를 하나 이상 포함해야 합니다.", example = "Test1234test!")
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
-        @Size(min = 10, max = 255, message = "비밀번호는 8자 이상 입력해주세요.")
+        @Size(min = 8, max = 255, message = "비밀번호는 8자 이상 255자 이하로 입력해주세요.")
         String password
 ){
 }
