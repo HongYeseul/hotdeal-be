@@ -12,7 +12,7 @@ import static com.example.hot_deal.member.constants.error.MemberErrorCode.MEMBER
 
 public interface MemberJpaRepository extends MemberRepository, JpaRepository<Member, Long> {
 
-    default Member getUserByEmail(String email) {
+    default Member getMemberByEmail(String email) {
         return findByEmail(email).orElseThrow(
                 () -> new HotDealException(MEMBER_NOT_FOUND)
         );
