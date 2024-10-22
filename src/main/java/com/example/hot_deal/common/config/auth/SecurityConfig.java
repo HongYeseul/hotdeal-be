@@ -33,9 +33,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                API_V1 + "/product/**",
-                                API_V1 + "/member/register",
-                                API_V1 + "/login",
+                                API_V1 + "/**",
                                 "/h2-console/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**")
@@ -50,7 +48,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(exceptionHandlingFilter, JwtFilter.class)
+                .addFilterAfter(exceptionHandlingFilter, JwtFilter.class)
                 .build();
     }
 
