@@ -33,15 +33,15 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
-        Optional<Cookie> cookie = cookieProvider.getCookieByName(request, TokenType.ACCESS_TOKEN.name());
+        Optional<Cookie> refreshTokenCookie = cookieProvider.getCookieByName(request, TokenType.REFRESH_TOKEN.name());
 
         if (authorization != null && authorization.startsWith(BEARER_TOKEN_PREFIX)) {
             String accessToken = authorization.substring(BEARER_TOKEN_PREFIX.length());
             jwtProvider.validateToken(accessToken, TokenType.ACCESS_TOKEN);
             setAuthentication(accessToken);
-        } else if (cookie.isPresent() && authorization == null) {
+        } else if (refreshTokenCookie.isPresent() && authorization == null) {
             // 쿠키가 존재하고 authorization 헤더가 없을 때
-            String refreshToken = cookie.get().getValue();
+            String refreshToken = refreshTokenCookie.get().getValue();
             jwtProvider.validateToken(refreshToken, TokenType.REFRESH_TOKEN);
             setAuthentication(refreshToken);
         }
