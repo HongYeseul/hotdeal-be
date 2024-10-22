@@ -11,13 +11,22 @@ import org.springframework.stereotype.Component;
 public class AuthProvider {
 
     private final JwtProvider jwtProvider;
+    private final CookieProvider cookieProvider;
 
     public MemberTokens makeToken(Member member) {
+        String refreshToken = createRefreshToken(member);
         return new MemberTokens(
                 createAccessToken(member),
-                createRefreshToken(member)
+                cookieProvider.createCookieForToken(refreshToken, TokenType.REFRESH_TOKEN)
         );
     }
+
+//    public MemberTokens makeToken(Member member) {
+//        return new MemberTokens(
+//                createAccessToken(member),
+//                createRefreshToken(member)
+//        );
+//    }
 
     public String createAccessToken(Member member) {
         return jwtProvider.createToken(member, TokenType.ACCESS_TOKEN);

@@ -1,5 +1,6 @@
 package com.example.hot_deal.common.config.auth;
 
+import com.example.hot_deal.auth.configuration.JwtFilter;
 import com.example.hot_deal.common.exception.handler.ExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -22,6 +24,8 @@ import static com.example.hot_deal.common.config.web.WebConfig.API_V1;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
     private final ExceptionHandlerFilter exceptionHandlingFilter;
 
     @Bean
@@ -29,9 +33,8 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                API_V1 + "/product/**",
-                                API_V1 + "/member/**",
-                                API_V1 + "/login",
+                                API_V1 + "/**",
+                                "/h2-console/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**")
                         .permitAll()
@@ -44,9 +47,10 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(exceptionHandlingFilter, JwtFilter.class)
                 .build();
     }
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
