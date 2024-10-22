@@ -2,81 +2,73 @@ package com.example.hot_deal.member.service;
 
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
-import com.example.hot_deal.member.domain.repository.MemberJpaRepository;
+import com.example.hot_deal.member.domain.repository.MemberRepository;
 import com.example.hot_deal.member.dto.RegisterRequest;
 import com.example.hot_deal.member.dto.RegisterResponse;
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
+import com.example.hot_deal.member.fixture.MemberFixture;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.hot_deal.member.constants.error.MemberErrorCode.DUPLICATE_EMAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Slf4j
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class MemberServiceTest {
-    @Mock
-    private MemberJpaRepository userJpaRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MemberRepository memberRepository;
 
-    @InjectMocks
+    @Autowired
     private MemberService memberService;
 
-    private static FixtureMonkey fixtureMonkey;
-
-    @BeforeAll
-    static void setUp() {
-        fixtureMonkey = FixtureMonkey.builder()
-                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
-                .build();
+    @BeforeEach
+    void cleanup() {
+        memberRepository.deleteAll();
     }
 
-    @Test
-    void 회원가입_성공() {
-        // Given
-        RegisterRequest request = fixtureMonkey.giveMeOne(RegisterRequest.class);
-        String encodedPassword = "encodedPassword";
+    @Nested
+    @DisplayName("회원 가입 테스트")
+    class RegisterTest {
 
-        when(userJpaRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(request.getRawPassword())).thenReturn(encodedPassword);
+        @Test
+        @DisplayName("회원 가입 성공: 멤버 생성")
+        void register() {
+            // Given
+            Member member = MemberFixture.createMember();
+            RegisterRequest request = new RegisterRequest(member.getEmail(), member.getName(), member.getPasswordHash());
 
-        // When
-        RegisterResponse response = memberService.register(request);
+            // When
+            RegisterResponse response = memberService.register(request);
 
-        // Then
-        assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo(request.getEmail());
-        assertThat(response.getName()).isEqualTo(request.getName());
+            // Then
+            assertAll(
+                    () -> assertThat(response).isNotNull(),
+                    () -> assertThat(response.getEmail()).isEqualTo(member.getEmail())
+            );
+        }
 
-        verify(userJpaRepository).save(any(Member.class));
-    }
+        @Test
+        @Transactional
+        @DisplayName("회원 가입 실패: 이메일 중복")
+        void register_emailDuplicate_Fail() {
+            // Given
+            Member member = MemberFixture.createMember();
+            Member existMember = memberRepository.save(member);
+            RegisterRequest request = new RegisterRequest(existMember.getEmail(), existMember.getName(), existMember.getPasswordHash());
 
-    @Test
-    void 회원가입_실패_이메일_중복() {
-        // Given
-        RegisterRequest request = fixtureMonkey.giveMeOne(RegisterRequest.class);
-
-        when(userJpaRepository.existsByEmail(request.getEmail())).thenReturn(true);
-
-        // When & Then
-        assertThatThrownBy(() -> memberService.register(request))
-                .isInstanceOf(HotDealException.class)
-                .hasFieldOrPropertyWithValue("errorCode", DUPLICATE_EMAIL);
-
-        verify(userJpaRepository, never()).save(any(Member.class));
+            // When & Then
+            assertThatThrownBy(() -> memberService.register(request))
+                    .isInstanceOf(HotDealException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", DUPLICATE_EMAIL);
+        }
     }
 }
