@@ -1,10 +1,10 @@
-package com.example.hot_deal.user.service;
+package com.example.hot_deal.member.service;
 
 import com.example.hot_deal.common.exception.HotDealException;
-import com.example.hot_deal.user.domain.entity.User;
-import com.example.hot_deal.user.domain.repository.UserRepository;
-import com.example.hot_deal.user.dto.RegisterRequest;
-import com.example.hot_deal.user.dto.RegisterResponse;
+import com.example.hot_deal.member.domain.entity.Member;
+import com.example.hot_deal.member.domain.repository.MemberJpaRepository;
+import com.example.hot_deal.member.dto.RegisterRequest;
+import com.example.hot_deal.member.dto.RegisterResponse;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static com.example.hot_deal.common.exception.code.UserErrorCode.DUPLICATE_EMAIL;
+import static com.example.hot_deal.member.constants.error.MemberErrorCode.DUPLICATE_EMAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,15 +26,15 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class MemberServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private MemberJpaRepository userJpaRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserService userService;
+    private MemberService memberService;
 
     private static FixtureMonkey fixtureMonkey;
 
@@ -51,18 +51,18 @@ class UserServiceTest {
         RegisterRequest request = fixtureMonkey.giveMeOne(RegisterRequest.class);
         String encodedPassword = "encodedPassword";
 
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+        when(userJpaRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(request.getRawPassword())).thenReturn(encodedPassword);
 
         // When
-        RegisterResponse response = userService.register(request);
+        RegisterResponse response = memberService.register(request);
 
         // Then
         assertThat(response).isNotNull();
         assertThat(response.getEmail()).isEqualTo(request.getEmail());
         assertThat(response.getName()).isEqualTo(request.getName());
 
-        verify(userRepository).save(any(User.class));
+        verify(userJpaRepository).save(any(Member.class));
     }
 
     @Test
@@ -70,13 +70,13 @@ class UserServiceTest {
         // Given
         RegisterRequest request = fixtureMonkey.giveMeOne(RegisterRequest.class);
 
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
+        when(userJpaRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
         // When & Then
-        assertThatThrownBy(() -> userService.register(request))
+        assertThatThrownBy(() -> memberService.register(request))
                 .isInstanceOf(HotDealException.class)
                 .hasFieldOrPropertyWithValue("errorCode", DUPLICATE_EMAIL);
 
-        verify(userRepository, never()).save(any(User.class));
+        verify(userJpaRepository, never()).save(any(Member.class));
     }
 }

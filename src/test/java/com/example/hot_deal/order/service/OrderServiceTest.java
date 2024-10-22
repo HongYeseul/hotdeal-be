@@ -4,8 +4,8 @@ import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
-import com.example.hot_deal.user.domain.entity.User;
-import com.example.hot_deal.user.domain.repository.UserRepository;
+import com.example.hot_deal.member.domain.entity.Member;
+import com.example.hot_deal.member.domain.repository.MemberJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ class OrderServiceTest {
     private OrderService orderService;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberJpaRepository userJpaRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -56,9 +56,9 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = createTestUser();
-        userRepository.save(user);
-        userId = user.getId();
+        Member member = createTestUser();
+        userJpaRepository.save(member);
+        userId = member.getId();
     
         Product product = createTestProduct();
         productRepository.save(product);
@@ -67,8 +67,8 @@ class OrderServiceTest {
         redisTemplate.opsForValue().set(KEY_PREFIX + productId.toString(), TEST_PRODUCT_STOCK.toString());
     }
 
-    private User createTestUser() {
-        return User.builder()
+    private Member createTestUser() {
+        return Member.builder()
                 .name(TEST_USER_NAME)
                 .email(TEST_USER_EMAIL)
                 .passwordHash(TEST_USER_PASSWORD)
@@ -87,7 +87,7 @@ class OrderServiceTest {
     void tearDown() {
         orderRepository.deleteAll();
         productRepository.deleteAll();
-        userRepository.deleteAll();
+        userJpaRepository.deleteAll();
         redisTemplate.delete(productId.toString());
     }
 
@@ -159,12 +159,12 @@ class OrderServiceTest {
     @Test
     public void 상품_주문시_재고가_감소하고_주문이_생성된다() throws InterruptedException {
         // Given
-        User user = userRepository.findAll().get(0);
+        Member member = userJpaRepository.findAll().get(0);
         Product product = productRepository.findAll().get(0);
         Long initialStock = product.getStockQuantity();
 
         // When
-        orderService.orderProduct(user.getId(), product.getId());
+        orderService.orderProduct(member.getId(), product.getId());
         Thread.sleep(3000);
 
         // Then
@@ -173,7 +173,7 @@ class OrderServiceTest {
         List<Order> orders = orderRepository.findAll();
         assertEquals(1, orders.size());
         Order createdOrder = orders.get(0);
-        assertEquals(user.getId(), createdOrder.getUser().getId());
+        assertEquals(member.getId(), createdOrder.getMember().getId());
         assertEquals(product.getId(), createdOrder.getProduct().getId());
     }
 }
