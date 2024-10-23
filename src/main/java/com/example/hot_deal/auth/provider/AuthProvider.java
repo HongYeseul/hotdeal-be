@@ -28,11 +28,11 @@ public class AuthProvider {
 //        );
 //    }
 
-    public String createAccessToken(Member member) {
+    private String createAccessToken(Member member) {
         return jwtProvider.createToken(member, TokenType.ACCESS_TOKEN);
     }
 
-    public String createRefreshToken(Member member) {
+    private String createRefreshToken(Member member) {
         return jwtProvider.createToken(member, TokenType.REFRESH_TOKEN);
     }
 }
