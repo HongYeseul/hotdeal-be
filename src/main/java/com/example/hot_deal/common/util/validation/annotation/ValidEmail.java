@@ -4,6 +4,7 @@ import com.example.hot_deal.common.util.validation.validator.EmailValidator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.lang.annotation.Documented;
@@ -17,6 +18,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Size(max = 255)
+@NotBlank(message = "이메일이 입력되지 않았습니다.")
 @Schema(description = "회원 이메일", example = "test1234@naver.com")
 public @interface ValidEmail {
     String message() default "유효하지 않은 이메일 형식입니다.";
