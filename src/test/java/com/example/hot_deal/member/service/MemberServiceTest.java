@@ -21,6 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 class MemberServiceTest {
 
@@ -57,7 +58,6 @@ class MemberServiceTest {
         }
 
         @Test
-        @Transactional
         @DisplayName("회원 가입 실패: 이메일 중복")
         void register_emailDuplicate_Fail() {
             // Given
