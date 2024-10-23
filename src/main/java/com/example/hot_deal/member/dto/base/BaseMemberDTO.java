@@ -12,9 +12,11 @@ import lombok.Getter;
 @Schema(description = "회원 기본 정보")
 public class BaseMemberDTO {
     @ValidEmail
+    @Schema(description = "회원 이메일", example = "test1234@naver.com")
     private final String email;
 
     @ValidName
+    @Schema(description = "회원 이름", example = "홍길동")
     private final String name;
 
     public static BaseMemberDTO from(Member member) {

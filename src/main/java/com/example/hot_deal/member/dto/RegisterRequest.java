@@ -10,6 +10,7 @@ import lombok.Getter;
 public class RegisterRequest extends BaseMemberDTO {
 
     @ValidPassword
+    @Schema(description = "비밀번호는 영어, 숫자, 특수 문자를 하나 이상 포함해야 합니다.", example = "Test1234test!")
     private String rawPassword;
 
     public RegisterRequest(String email, String name, String rawPassword) {
