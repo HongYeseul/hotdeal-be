@@ -34,7 +34,7 @@ public class AuthService {
         return member;
     }
 
-    public void matchPassword(String password, String hashedPassword) {
+    private void matchPassword(String password, String hashedPassword) {
         if (!passwordEncoder.matches(password, hashedPassword)) {
             throw new HotDealException(INCORRECT_PASSWORD);
         }

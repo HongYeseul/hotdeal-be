@@ -19,10 +19,14 @@ public class MemberFixture {
     }
 
     public static Member memberFixture() {
-        String encodedPassword = encoder.encode("rawPassword");
+        String encodedPassword = encoder.encode(getFixtureRawPassword());
         return fixtureMonkey.giveMeBuilder(Member.class)
                 .set("passwordHash", encodedPassword)
                 .sample();
+    }
+
+    public static String getFixtureRawPassword() {
+        return "rawPassword";
     }
 
 }
