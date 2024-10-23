@@ -29,7 +29,7 @@ public class AuthService {
     }
 
     private Member getVerifiedUser(String loginId, String password) {
-        Member member = memberRepository.getUserByEmail(loginId);
+        Member member = memberRepository.getMemberByEmail(loginId);
         matchPassword(password, member.getPasswordHash());
         return member;
     }

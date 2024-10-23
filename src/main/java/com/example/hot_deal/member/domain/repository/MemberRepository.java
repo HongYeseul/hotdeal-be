@@ -8,7 +8,9 @@ public interface MemberRepository {
 
     Member save(Member member);
 
-    Member getUserByEmail(String s);
+    Member getMemberByEmail(String s);
 
     Member getMemberById(Long id);
+
+    void deleteAll();
 }
