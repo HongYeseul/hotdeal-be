@@ -25,25 +25,16 @@ public class PurchasedUserOrderConsumer {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @KafkaListener(topics = "applied-users", groupId = "order-group")
     public void processOrder(String message) {
-        String[] parts = message.split(":");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("잘못된 메시지 형식입니다.");
-        }
+        PurchasedRequest request = new PurchasedRequest(message);
 
-        Long memberId = Long.parseLong(parts[0]);
-        Long productId = Long.parseLong(parts[1]);
-        
-        Member member = memberRepository.getMemberById(memberId);
-        Product product = productRepository.getProductById(productId);
+        Member member = memberRepository.getMemberById(request.getMemberId());
+        Product product = productRepository.getProductById(request.getProductId());
 
         product.decreaseQuantity();
         productRepository.save(product);
 
-        orderRepository.save(Order.builder()
-                .member(member)
-                .product(product)
-                .build());
+        orderRepository.save(new Order(member, product));
 
-        log.info("사용자 {}의 주문이 DB에 저장되었습니다.", memberId);
+        log.info("사용자 {}의 주문이 DB에 저장되었습니다.", request.getMemberId());
     }
 }
