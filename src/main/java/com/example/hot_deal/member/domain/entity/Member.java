@@ -1,6 +1,7 @@
 package com.example.hot_deal.member.domain.entity;
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
+import com.example.hot_deal.member.dto.base.BaseMemberDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,14 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member extends BaseTimeEntity {
 
@@ -32,11 +31,18 @@ public class Member extends BaseTimeEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    public static Member create(String name, String email, String encodedPassword) {
-        return Member.builder()
-                .name(name)
-                .email(email)
-                .passwordHash(encodedPassword)
-                .build();
+    /**
+     * 멤버 회원 가입
+     */
+    public Member(String name, String email, String encodedPassword) {
+        this(null, name, email, encodedPassword);
+    }
+
+    public static Member makeAuthMember(Long id, String email) {
+        return new Member(id, "AUTH", email, "PASSWORD");
+    }
+
+    public BaseMemberDTO getBaseMemberDto() {
+        return new BaseMemberDTO(this.getEmail(), this.getPasswordHash());
     }
 }

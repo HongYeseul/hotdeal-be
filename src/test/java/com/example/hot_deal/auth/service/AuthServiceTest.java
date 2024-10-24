@@ -52,8 +52,8 @@ class AuthServiceTest {
             MemberTokens memberTokens = authService.login(loginRequest);
 
             assertAll(
-                    () -> assertEquals(memberTokens.accessToken(), authProvider.makeToken(member).accessToken()),
-                    () -> assertEquals(memberTokens.refreshToken(), authProvider.makeToken(member).refreshToken())
+                    () -> assertEquals(memberTokens.accessToken(), authProvider.generateToken(member).accessToken()),
+                    () -> assertEquals(memberTokens.refreshToken(), authProvider.generateToken(member).refreshToken())
             );
         }
 

@@ -25,7 +25,7 @@ public class AuthService {
      */
     public MemberTokens login(LoginRequest loginRequest) {
         Member member = getVerifiedUser(loginRequest.loginId(), loginRequest.password());
-        return authProvider.makeToken(member);
+        return authProvider.generateToken(member);
     }
 
     private Member getVerifiedUser(String loginId, String password) {
