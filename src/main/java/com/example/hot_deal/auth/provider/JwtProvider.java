@@ -1,5 +1,6 @@
 package com.example.hot_deal.auth.provider;
 
+import com.example.hot_deal.auth.configuration.MemberInfo;
 import com.example.hot_deal.auth.constants.TokenType;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
@@ -27,8 +28,9 @@ import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_UNSU
 
 @Component
 public class JwtProvider {
-    private static final String ID = "id";
-    private static final String TYPE = "type";
+    private static final String MEMBER_ID = "id";
+    private static final String MEMBER_EMAIL = "email";
+    private static final String TOKEN_TYPE = "type";
 
     private final SecretKey secretKey;
 
@@ -41,8 +43,9 @@ public class JwtProvider {
         Instant now = Instant.now();
         Instant expirationTime = now.plusSeconds(tokenType.getExpirationTime());
         return Jwts.builder()
-                .claim(TYPE, tokenType.name())
-                .claim(ID, member.getId())
+                .claim(TOKEN_TYPE, tokenType.name())
+                .claim(MEMBER_EMAIL, member.getEmail())
+                .claim(MEMBER_ID, member.getId())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expirationTime))
                 .signWith(secretKey)
@@ -75,12 +78,23 @@ public class JwtProvider {
         }
     }
 
-    public String getType(String token) {
+    private String getType(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                .get(TYPE, String.class);
+                .get(TOKEN_TYPE, String.class);
     }
 
-    public Long getId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(ID, Long.class);
+    public MemberInfo getMemberInfo(String token) {
+        return new MemberInfo(
+                getId(token),
+                getEmail(token)
+        );
+    }
+
+    private Long getId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(MEMBER_ID, Long.class);
+    }
+
+    private String getEmail(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(MEMBER_EMAIL, String.class);
     }
 }
