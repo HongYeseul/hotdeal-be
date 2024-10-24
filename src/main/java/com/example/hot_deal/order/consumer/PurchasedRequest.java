@@ -37,12 +37,10 @@ public class PurchasedRequest {
     }
 
     private static Long convertToLong(String string) {
-        final long parsedNumber;
         try {
-            parsedNumber = Long.parseLong(string);
+            return Long.parseLong(string);
         } catch (NumberFormatException e) {
             throw new HotDealException(INVALID_NUMBER_FORMAT);
         }
-        return parsedNumber;
     }
 }
