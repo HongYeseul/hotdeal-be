@@ -29,9 +29,8 @@ import static com.example.hot_deal.auth.constants.error.AuthErrorCode.TOKEN_UNSU
 
 @Component
 public class JwtProvider {
-    private static final String MEMBER_ID = "id";
-    private static final String MEMBER_EMAIL = "email";
-    private static final String TOKEN_TYPE = "type";
+    private final String MEMBER_ID = "member_id";
+    private final String TOKEN_TYPE = "token_type";
 
     private final SecretKey secretKey;
 
@@ -45,7 +44,6 @@ public class JwtProvider {
         Instant expirationTime = now.plusSeconds(tokenType.getExpirationTime());
         return Jwts.builder()
                 .claim(TOKEN_TYPE, tokenType.name())
-                .claim(MEMBER_EMAIL, member.getEmail())
                 .claim(MEMBER_ID, member.getId())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expirationTime))
@@ -90,8 +88,7 @@ public class JwtProvider {
                 .getPayload();
 
         return new MemberInfo(
-                claims.get(MEMBER_ID, Long.class),
-                claims.get(MEMBER_EMAIL, String.class)
+                claims.get(MEMBER_ID, Long.class)
         );
     }
 }

@@ -13,11 +13,10 @@ import java.util.List;
 public class MemberInfo implements UserDetails {
 
     private Long id;
-    private String email;
     private String password;
 
-    public MemberInfo(Long id, String email) {
-        this(id, email, "PASSWORD");
+    public MemberInfo(Long id) {
+        this(id, "PASSWORD");
     }
 
     @Override
@@ -27,7 +26,7 @@ public class MemberInfo implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return String.valueOf(id);
     }
 }
 
