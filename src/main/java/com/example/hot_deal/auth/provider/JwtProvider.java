@@ -4,6 +4,7 @@ import com.example.hot_deal.auth.configuration.MemberInfo;
 import com.example.hot_deal.auth.constants.TokenType;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -84,17 +85,13 @@ public class JwtProvider {
     }
 
     public MemberInfo getMemberInfo(String token) {
+        Claims claims = Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload();
+
         return new MemberInfo(
-                getId(token),
-                getEmail(token)
+                claims.get(MEMBER_ID, Long.class),
+                claims.get(MEMBER_EMAIL, String.class)
         );
-    }
-
-    private Long getId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(MEMBER_ID, Long.class);
-    }
-
-    private String getEmail(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get(MEMBER_EMAIL, String.class);
     }
 }
