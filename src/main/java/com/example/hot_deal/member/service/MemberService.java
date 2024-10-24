@@ -31,7 +31,7 @@ public class MemberService {
         log.info("Attempting to register member with email: {}", registerRequest.getEmail());
         assertUniqueEmail(registerRequest.getEmail());
 
-        Member member = Member.create(
+        final Member member = new Member(
                 registerRequest.getName(),
                 registerRequest.getEmail(),
                 passwordEncoder.encode(registerRequest.getRawPassword())
@@ -52,7 +52,7 @@ public class MemberService {
      * 회원 정보 조회
      */
     public BaseMemberDTO findMemberById(Long id) {
-        Member member = memberRepository.getMemberById(id);
-        return BaseMemberDTO.from(member);
+        final Member member = memberRepository.getMemberById(id);
+        return member.getBaseMemberDto();
     }
 }
