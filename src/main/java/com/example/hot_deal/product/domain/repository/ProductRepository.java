@@ -8,6 +8,8 @@ public interface ProductRepository {
 
     Product getProductById(Long id);
 
+    Long getProductQuantityById(Long id);
+
     Page<Product> findAll(Pageable pageable);
 
     Product save(Product product);
