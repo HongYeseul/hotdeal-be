@@ -1,7 +1,14 @@
 package com.example.hot_deal.product.domain.repository;
 
 import com.example.hot_deal.product.domain.entity.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository {
+
+    Product getProductById(Long id);
+
+    Page<Product> findAll(Pageable pageable);
+
+    Product save(Product product);
 }
