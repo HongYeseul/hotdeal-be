@@ -25,7 +25,7 @@ public class PurchasedUserOrderConsumer {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @KafkaListener(topics = "applied-users", groupId = "order-group")
     public void processOrder(String message) {
-        PurchasedRequest request = new PurchasedRequest(message);
+        PurchasedRequest request = PurchasedRequest.from(message);
 
         Member member = memberRepository.getMemberById(request.getMemberId());
         Product product = productRepository.getProductById(request.getProductId());
