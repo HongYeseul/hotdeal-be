@@ -15,6 +15,9 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    /**
+     * 모든 제품 목록 조회
+     */
     public Page<ProductDTO> getProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .map(ProductDTO::new);

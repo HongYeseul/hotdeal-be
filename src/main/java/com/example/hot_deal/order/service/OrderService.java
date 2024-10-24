@@ -17,9 +17,14 @@ public class OrderService {
     private final ProductCountRepository productCountRepository;
     private final PurchasedUserRepository purchasedUserRepository;
 
+    /**
+     * 물건 구매
+     * @param userId 구매 주체
+     * @param productId 구매 대상
+     */
     public void orderProduct(Long userId, Long productId) {
         String productKey = productId.toString();
-        Product product = productRepository.findById(productId).orElseThrow(RuntimeException::new);
+        Product product = productRepository.getProductById(productId);
         productCountRepository.decrement(productKey, product.getStockQuantity().toString());
 
         purchasedUserRepository.purchase(userId, productId);

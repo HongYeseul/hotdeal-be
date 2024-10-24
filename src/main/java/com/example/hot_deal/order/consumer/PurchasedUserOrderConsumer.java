@@ -3,9 +3,9 @@ package com.example.hot_deal.order.consumer;
 import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
-import com.example.hot_deal.product.domain.repository.ProductRepository;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
+import com.example.hot_deal.product.domain.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -34,8 +34,7 @@ public class PurchasedUserOrderConsumer {
         Long productId = Long.parseLong(parts[1]);
         
         Member member = memberRepository.getMemberById(memberId);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+        Product product = productRepository.getProductById(productId);
 
         product.decreaseQuantity();
         productRepository.save(product);
