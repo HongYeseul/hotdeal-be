@@ -35,10 +35,10 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             throw new HotDealException(AuthErrorCode.LOGIN_REQUIRED);
         }
         Object principal = authentication.getPrincipal();
-        if (principal instanceof CustomUserDetails userDetails) {
-            return userDetails.getMember().getId();
+        if (principal instanceof MemberInfo userDetails) {
+            return userDetails.getId();
         }
-        log.error("인증된 사용자의 principal이 CustomUserDetails 타입과 다릅니다. 실제 타입: {}", principal.getClass().getName());
+        log.error("인증된 사용자의 principal이 MemberInfo 타입과 다릅니다. 실제 타입: {}", principal.getClass().getName());
         throw new HotDealException(AuthErrorCode.INVALID_AUTHENTICATION_STATE);
     }
 }
