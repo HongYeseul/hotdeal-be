@@ -3,7 +3,6 @@ package com.example.hot_deal.auth.configuration;
 import com.example.hot_deal.auth.constants.TokenType;
 import com.example.hot_deal.auth.provider.CookieProvider;
 import com.example.hot_deal.auth.provider.JwtProvider;
-import com.example.hot_deal.member.domain.entity.Member;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -49,13 +48,11 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(String token) {
-        Long id = jwtProvider.getId(token);
-        Member member = Member.builder()
-                .id(id)
-                .build();
-        CustomUserDetails customUserDetails = new CustomUserDetails(member);
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null,
-                customUserDetails.getAuthorities());
+        MemberInfo memberInfo = jwtProvider.getMemberInfo(token);
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+                memberInfo,
+                null,
+                memberInfo.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }
