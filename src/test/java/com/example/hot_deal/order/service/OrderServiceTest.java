@@ -1,12 +1,12 @@
 package com.example.hot_deal.order.service;
 
 import com.example.hot_deal.member.domain.repository.MemberRepository;
-import com.example.hot_deal.member.fixture.MemberFixture;
+import com.example.hot_deal.fixture.MemberFixture;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
-import com.example.hot_deal.product.fixture.ProductFixture;
+import com.example.hot_deal.fixture.ProductFixture;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

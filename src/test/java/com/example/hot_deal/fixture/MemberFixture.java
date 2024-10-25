@@ -1,4 +1,4 @@
-package com.example.hot_deal.member.fixture;
+package com.example.hot_deal.fixture;
 
 import com.example.hot_deal.member.domain.entity.Member;
 import com.navercorp.fixturemonkey.FixtureMonkey;
