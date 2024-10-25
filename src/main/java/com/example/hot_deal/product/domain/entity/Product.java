@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "products")
@@ -40,6 +40,10 @@ public class Product extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDateTime openTime;
+
+    public Product(String name, BigDecimal price, Long stockQuantity, LocalDateTime openTime) {
+        this(null, name, price, stockQuantity, openTime);
+    }
 
     public boolean decreaseQuantity() {
         if (this.stockQuantity <= 0) {

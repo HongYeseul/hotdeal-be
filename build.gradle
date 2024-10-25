@@ -24,28 +24,39 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-	implementation 'org.springframework.kafka:spring-kafka'
+	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	// Doc
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+	// Etc
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	/**
+	 * Test
+	 */
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.27")
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.awaitility:awaitility:4.2.2'
+
+	// Fixture Monkey
+	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.27")
 }
 
 tasks.named('test') {

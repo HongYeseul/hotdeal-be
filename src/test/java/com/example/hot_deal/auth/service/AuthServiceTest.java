@@ -6,7 +6,7 @@ import com.example.hot_deal.auth.provider.AuthProvider;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
-import com.example.hot_deal.member.fixture.MemberFixture;
+import com.example.hot_deal.fixture.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
