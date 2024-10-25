@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @SpringBootTest
@@ -52,7 +55,7 @@ class OrderServiceTest {
 
         @Test
         @DisplayName("구매 요청 성공: 1번의 구매")
-        void order() throws InterruptedException {
+        void order() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Product product = productRepository.save(ProductFixture.productFixture());
 
@@ -60,14 +63,15 @@ class OrderServiceTest {
 
             orderService.orderProduct(member.getId(), product.getId());
 
-            // Then
-            redisTemplate.opsForValue().get(KEY_PREFIX + product.getId());
-
-            Thread.sleep(3000);
+            await().atMost(3, TimeUnit.SECONDS)
+                    .until(() -> {
+                        String currentStock = redisTemplate.opsForValue().get(KEY_PREFIX + product.getId());
+                        return currentStock != null;
+                    });
 
             Product updatedProduct = productRepository.getProductById(product.getId());
             assertEquals(product.getStockQuantity()- 1L, updatedProduct.getStockQuantity());
-            redisTemplate.delete(product.getId().toString());
+            redisTemplate.delete(KEY_PREFIX + product.getId());
         }
     }
 
