@@ -1,5 +1,6 @@
 package com.example.hot_deal.product.service;
 
+import com.example.hot_deal.config.TestConfig;
 import com.example.hot_deal.fixture.ProductFixture;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
@@ -11,9 +12,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -22,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 class ProductServiceTest {
 
     @Autowired
