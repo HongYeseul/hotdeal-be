@@ -1,7 +1,7 @@
 package com.example.hot_deal.order.service;
 
 import com.example.hot_deal.order.domain.repository.PurchasedUserRepository;
-import com.example.hot_deal.product.domain.repository.ProductCountRepository;
+import com.example.hot_deal.product.domain.repository.redis.ProductCountRepository;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
