@@ -1,4 +1,4 @@
-package com.example.hot_deal.product.domain.repository;
+package com.example.hot_deal.product.domain.repository.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
