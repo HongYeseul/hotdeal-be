@@ -60,6 +60,10 @@ jobs:
 #          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
 #          DOCKER_HOST: unix:///var/run/docker.sock
 
+      # Gradle 빌드 및 테스트 단계 추가
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
