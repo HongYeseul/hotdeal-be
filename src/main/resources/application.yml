@@ -15,3 +15,8 @@ spring:
   sql:
     init:
       mode: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
