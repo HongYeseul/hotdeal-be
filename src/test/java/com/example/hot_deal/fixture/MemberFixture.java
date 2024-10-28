@@ -25,6 +25,10 @@ public class MemberFixture {
                 .sample();
     }
 
+    public static Member plainMemberFixture() {
+        return new Member("YS", "test@gamil.com", getFixtureRawPassword());
+    }
+
     public static String getFixtureRawPassword() {
         return "rawPassword";
     }
