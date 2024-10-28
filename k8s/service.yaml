@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hot-deal-dev-svc
+spec:
+  selector:
+    app: hot-deal-dev
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP

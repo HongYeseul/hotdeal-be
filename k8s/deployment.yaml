@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hot-deal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hot-deal-dev
+  template:
+    metadata:
+      labels:
+        app: hot-deal-dev
+    spec:
+      containers:
+        - name: hot-deal-dev
+          image: yeseulhong/hot-deal-dev:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: jwt-secret
