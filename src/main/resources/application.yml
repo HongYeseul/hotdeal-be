@@ -15,6 +15,10 @@ spring:
   sql:
     init:
       mode: always
+  data:
+    redis:
+      repositories:
+        enabled: false
 management:
   endpoints:
     web:
