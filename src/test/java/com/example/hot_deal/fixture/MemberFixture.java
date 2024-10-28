@@ -14,10 +14,18 @@ public class MemberFixture {
             .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
             .build();
 
+    /**
+     * FixtureMonkey 사용
+     * @return 랜덤으로 생성된 Member 객체
+     */
     public static Member createMember() {
         return fixtureMonkey.giveMeOne(Member.class);
     }
 
+    /**
+     * FixtureMonkey 사용
+     * @return 암호화된 비밀번호를 가진 랜덤으로 생성된 Member 객체
+     */
     public static Member memberFixture() {
         String encodedPassword = encoder.encode(getFixtureRawPassword());
         return fixtureMonkey.giveMeBuilder(Member.class)
@@ -25,7 +33,14 @@ public class MemberFixture {
                 .sample();
     }
 
-    public static String getFixtureRawPassword() {
+    /**
+     * @return FixtureMonkey를 사용하지 않은 평문 비밀번호를 가진 Member 객체
+     */
+    public static Member plainMemberFixture() {
+        return new Member("YS", "test@gmail.com", getFixtureRawPassword());
+    }
+
+    private static String getFixtureRawPassword() {
         return "rawPassword";
     }
 

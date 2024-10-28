@@ -4,6 +4,7 @@ import com.example.hot_deal.auth.dto.LoginRequest;
 import com.example.hot_deal.auth.dto.MemberTokens;
 import com.example.hot_deal.auth.provider.AuthProvider;
 import com.example.hot_deal.common.exception.HotDealException;
+import com.example.hot_deal.config.TestConfig;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
 import com.example.hot_deal.fixture.MemberFixture;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.hot_deal.member.constants.error.MemberErrorCode.INCORRECT_PASSWORD;
@@ -23,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Transactional
 @SpringBootTest
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 class AuthServiceTest {
 
     @Autowired

@@ -1,6 +1,7 @@
 package com.example.hot_deal.member.service;
 
 import com.example.hot_deal.common.exception.HotDealException;
+import com.example.hot_deal.config.TestConfig;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
 import com.example.hot_deal.member.dto.RegisterRequest;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.hot_deal.member.constants.error.MemberErrorCode.DUPLICATE_EMAIL;
@@ -23,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Slf4j
 @Transactional
 @SpringBootTest
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 class MemberServiceTest {
 
     @Autowired

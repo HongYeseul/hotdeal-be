@@ -1,11 +1,13 @@
 package com.example.hot_deal.order.service;
 
+import com.example.hot_deal.config.TestConfig;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
 import com.example.hot_deal.fixture.MemberFixture;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
+
 import com.example.hot_deal.fixture.ProductFixture;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +16,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +26,8 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 @SpringBootTest
 class OrderServiceTest {
 
@@ -45,8 +51,8 @@ class OrderServiceTest {
     @AfterEach
     void tearDown() {
         orderRepository.deleteAll();
-        productRepository.deleteAll();
         memberRepository.deleteAll();
+        productRepository.deleteAll();
     }
 
     @Nested
@@ -56,7 +62,7 @@ class OrderServiceTest {
         @Test
         @DisplayName("구매 요청 성공: 1번의 구매")
         void order() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.plainMemberFixture());
             Product product = productRepository.save(ProductFixture.productFixture());
 
             redisTemplate.opsForValue().set(KEY_PREFIX + product.getId(), product.getStockQuantity().toString());
