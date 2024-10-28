@@ -57,6 +57,14 @@ dependencies {
 
 	// Fixture Monkey
 	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.27")
+
+	// Testcontainers
+	testImplementation "org.junit.jupiter:junit-jupiter:5.9.3"
+	testImplementation "org.testcontainers:testcontainers:1.20.1"
+	testImplementation "org.testcontainers:junit-jupiter:1.20.1"
+	testImplementation "org.testcontainers:mysql:1.20.1"
+	testImplementation "com.redis.testcontainers:testcontainers-redis-junit:1.6.4"
+	testImplementation "org.testcontainers:kafka:1.20.1"
 }
 
 tasks.named('test') {
