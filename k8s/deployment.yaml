@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hot-deal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hot-deal-dev
+  template:
+    metadata:
+      labels:
+        app: hot-deal-dev
+    spec:
+      containers:
+        - name: hot-deal-dev
+          image: yeseulhong/hot-deal-dev:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: jwt-secret
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
