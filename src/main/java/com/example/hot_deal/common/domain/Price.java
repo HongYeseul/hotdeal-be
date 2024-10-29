@@ -17,10 +17,10 @@ import static com.example.hot_deal.common.exception.code.CommonErrorCode.INVALID
 public class Price {
 
     @Column(nullable = false)
-    BigDecimal price;
+    private BigDecimal price;
 
     public Price(BigDecimal price) {
-        if (price.compareTo(BigDecimal.ZERO) < 0) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
             throw new HotDealException(INVALID_PRICE);
         }
         this.price = price;
