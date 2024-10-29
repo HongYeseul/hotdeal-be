@@ -33,7 +33,7 @@ public class PurchasedUserOrderConsumer {
         product.decreaseQuantity();
         productRepository.save(product);
 
-        orderRepository.save(new Order(member, product));
+        orderRepository.save(new Order(member, product.getName()));
 
         log.info("사용자 {}의 주문이 DB에 저장되었습니다.", request.getMemberId());
     }

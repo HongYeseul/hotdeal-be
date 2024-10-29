@@ -36,12 +36,12 @@ public class Product extends BaseTimeEntity {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Long stockQuantity;
+    private int stockQuantity;
 
     @Column(nullable = false)
     private LocalDateTime openTime;
 
-    public Product(String name, BigDecimal price, Long stockQuantity, LocalDateTime openTime) {
+    public Product(String name, BigDecimal price, int stockQuantity, LocalDateTime openTime) {
         this(null, name, price, stockQuantity, openTime);
     }
 

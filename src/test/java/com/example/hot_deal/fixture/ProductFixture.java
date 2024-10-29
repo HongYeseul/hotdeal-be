@@ -28,7 +28,7 @@ public class ProductFixture {
         return new Product(
                 "제품",
                 new BigDecimal("10000"),
-                100L,
+                100,
                 LocalDateTime.now()
         );
     }
