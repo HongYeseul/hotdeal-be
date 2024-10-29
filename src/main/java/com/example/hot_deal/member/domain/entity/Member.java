@@ -43,6 +43,6 @@ public class Member extends BaseTimeEntity {
     }
 
     public BaseMemberDTO getBaseMemberDto() {
-        return new BaseMemberDTO(this.getEmail(), this.getPasswordHash());
+        return new BaseMemberDTO(this.getEmail(), this.getName());
     }
 }

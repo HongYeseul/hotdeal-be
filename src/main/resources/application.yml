@@ -8,7 +8,7 @@ spring:
     secret: ${JWT_ACCESS_SECRET_KEY}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.101:30306/hot_deal
+    url: ${MYSQL_DB_URL}
     hikari:
       username: root
       password: ${MYSQL_DB_PASSWORD}
