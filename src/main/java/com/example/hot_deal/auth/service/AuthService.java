@@ -6,6 +6,8 @@ import com.example.hot_deal.auth.provider.AuthProvider;
 import com.example.hot_deal.common.exception.HotDealException;
 import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.member.domain.repository.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,5 +40,13 @@ public class AuthService {
         if (!passwordEncoder.matches(password, hashedPassword)) {
             throw new HotDealException(INCORRECT_PASSWORD);
         }
+    }
+
+    /**
+     * 로그아웃
+     */
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        authProvider.getRefreshToken(request);
+        authProvider.deleteRefreshToken(response);
     }
 }
