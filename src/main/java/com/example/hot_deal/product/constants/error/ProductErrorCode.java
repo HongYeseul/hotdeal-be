@@ -21,8 +21,8 @@ public enum ProductErrorCode implements ErrorCode {
     INVALID_PRODUCT_QUANTITY(BAD_REQUEST, "상품 수량이 유효하지 않습니다."),
 
     // 409 - 충돌 (Conflict)
-    PRODUCT_ALREADY_EXISTS(CONFLICT, "이미 존재하는 상품입니다.");
-
+    PRODUCT_ALREADY_EXISTS(CONFLICT, "이미 존재하는 상품입니다."),
+    INSUFFICIENT_PRODUCT_QUANTITY(CONFLICT, "수량이 부족하여 감소할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
