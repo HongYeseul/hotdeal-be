@@ -40,7 +40,7 @@ public class MemberFixture {
         return new Member("YS", "test@gmail.com", getFixtureRawPassword());
     }
 
-    private static String getFixtureRawPassword() {
+    public static String getFixtureRawPassword() {
         return "rawPassword";
     }
 
