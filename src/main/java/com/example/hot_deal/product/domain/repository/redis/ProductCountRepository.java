@@ -27,15 +27,20 @@ public class ProductCountRepository {
         String script = """
             local stock = redis.call('GET', KEYS[1])
             if not stock then
-              redis.call('SET', KEYS[1], ARGV[1])
-              stock = ARGV[1]
+                redis.call('SET', KEYS[1], ARGV[1])
+                stock = ARGV[1]
             end
-            stock = tonumber(stock)  -- nil일 경우 안전하게 초기화된 후 tonumber 호출
-            if stock <= 0 then
-              return -1
+            stock = tonumber(stock)
+            if not stock or stock <= 0 then
+                return nil
             end
             redis.call('DECR', KEYS[1])
-            return stock - 1
+            local new_stock = tonumber(redis.call('GET', KEYS[1]))
+            if new_stock < 0 then
+                redis.call('INCR', KEYS[1])
+                return nil
+            end
+            return new_stock
             """;
 
         Quantity result = new Quantity(
