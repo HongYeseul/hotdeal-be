@@ -16,17 +16,18 @@ public class Quantity {
     private Long quantity;
 
     public Quantity(Long quantity) {
-        if (quantity < 0) {
+        if (quantity == null || quantity < 0) {
             throw new HotDealException(INVALID_QUANTITY);
         }
         this.quantity = quantity;
     }
 
-    public boolean decrease() {
-        if (this.quantity <= 0) {
-            return false;
+    public Quantity decrease() {
+        synchronized(this) {
+            if (this.quantity <= 0) {
+                throw new HotDealException(INVALID_QUANTITY);
+            }
+            return new Quantity(this.quantity - 1);
         }
-        this.quantity--;
-        return true;
     }
 }

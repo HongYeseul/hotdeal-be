@@ -19,8 +19,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static com.example.hot_deal.product.constants.error.ProductErrorCode.INSUFFICIENT_PRODUCT_QUANTITY;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,8 +51,6 @@ public class Product extends BaseTimeEntity {
     }
 
     public void decreaseQuantity() {
-        if (!this.quantity.decrease()) {
-            throw new HotDealException(INSUFFICIENT_PRODUCT_QUANTITY);
-        }
+        this.quantity = this.quantity.decrease();
     }
 }
