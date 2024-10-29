@@ -19,7 +19,7 @@ public interface ProductJpaRepository extends ProductRepository, JpaRepository<P
     }
 
     default Long getProductQuantityById(Long id) {
-        return getProductById(id).getStockQuantity();
+        return getProductById(id).getQuantity();
     }
 
     Page<Product> findAll(Pageable pageable);
