@@ -1,8 +1,10 @@
 package com.example.hot_deal.order.domain.payment;
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
+import com.example.hot_deal.common.domain.Price;
 import com.example.hot_deal.order.domain.entity.Order;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,8 +18,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -33,8 +33,8 @@ public class Payment extends BaseTimeEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(nullable = false)
-    private BigDecimal totalAmount;
+    @Embedded
+    private Price totalPrice;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -43,4 +43,11 @@ public class Payment extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;    // 결제 상태
+
+    public Payment(Order order, Price totalPrice, PaymentType type) {
+        this.order = order;
+        this.totalPrice = totalPrice;
+        this.paymentType = type;
+        this.paymentStatus = PaymentStatus.PAYMENT_PENDING;
+    }
 }
