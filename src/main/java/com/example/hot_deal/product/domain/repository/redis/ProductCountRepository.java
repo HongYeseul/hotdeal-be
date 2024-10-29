@@ -1,5 +1,6 @@
 package com.example.hot_deal.product.domain.repository.redis;
 
+import com.example.hot_deal.common.domain.Quantity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.ReturnType;
@@ -22,28 +23,28 @@ public class ProductCountRepository {
         return operation.apply(key);
     }
 
-    public Long decrement(String productId, String initialStock) {
+    public Quantity decrement(String productId, String initialStock) {
         String script = """
             local stock = redis.call('GET', KEYS[1])
             if not stock then
               redis.call('SET', KEYS[1], ARGV[1])
               stock = ARGV[1]
             end
-            if tonumber(stock) <= 0 then
+            stock = tonumber(stock)  -- nil일 경우 안전하게 초기화된 후 tonumber 호출
+            if stock <= 0 then
               return -1
             end
             redis.call('DECR', KEYS[1])
-            return tonumber(stock) - 1
+            return stock - 1
             """;
 
-        Long result = redisTemplate.execute((RedisCallback<Long>) connection ->
+        Quantity result = new Quantity(
+                redisTemplate.execute((RedisCallback<Long>) connection ->
                 connection.eval(script.getBytes(), ReturnType.INTEGER, 1,
-                        (KEY_PREFIX + productId).getBytes(), initialStock.getBytes()));
+                        (KEY_PREFIX + productId).getBytes(), initialStock.getBytes()))
+        );
 
-        if (result == -1L) {
-            throw new IllegalArgumentException("재고가 부족합니다.");
-        }
-        log.info("사용자가 상품 {}를 주문했습니다. 남은 재고: {}", productId, result);
+        log.info("사용자가 상품 {}를 주문했습니다. 남은 재고: {}", productId, result.getQuantity());
         return result;
     }
 
