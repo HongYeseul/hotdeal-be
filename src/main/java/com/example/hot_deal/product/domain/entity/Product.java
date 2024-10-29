@@ -2,20 +2,21 @@ package com.example.hot_deal.product.domain.entity;
 
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
+import com.example.hot_deal.common.domain.Price;
+import com.example.hot_deal.common.domain.Quantity;
+import com.example.hot_deal.common.exception.HotDealException;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,24 +33,24 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private BigDecimal price;
+    @Embedded
+    private Price totalPrice;
 
-    @Column(nullable = false)
-    private Long stockQuantity;
+    @Embedded
+    private Quantity quantity;
 
     @Column(nullable = false)
     private LocalDateTime openTime;
 
-    public Product(String name, BigDecimal price, Long stockQuantity, LocalDateTime openTime) {
-        this(null, name, price, stockQuantity, openTime);
+    public Product(String name, Price price, Quantity quantity, LocalDateTime openTime) {
+        this(null, name, price, quantity, openTime);
     }
 
-    public boolean decreaseQuantity() {
-        if (this.stockQuantity <= 0) {
-            return false;
-        }
-        this.stockQuantity--;
-        return true;
+    public Long getQuantity() {
+        return quantity.getQuantity();
+    }
+
+    public void decreaseQuantity() {
+        this.quantity = this.quantity.decrease();
     }
 }

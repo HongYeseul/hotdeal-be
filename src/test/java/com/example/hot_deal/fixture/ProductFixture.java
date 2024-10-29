@@ -1,5 +1,7 @@
 package com.example.hot_deal.fixture;
 
+import com.example.hot_deal.common.domain.Price;
+import com.example.hot_deal.common.domain.Quantity;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
@@ -27,8 +29,8 @@ public class ProductFixture {
     public static Product productFixture() {
         return new Product(
                 "제품",
-                new BigDecimal("10000"),
-                100L,
+                new Price(new BigDecimal("10000")),
+                new Quantity(100L),
                 LocalDateTime.now()
         );
     }
