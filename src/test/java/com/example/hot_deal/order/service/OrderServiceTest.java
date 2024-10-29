@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class OrderServiceTest {
 
     private static final String KEY_PREFIX = "product:count:";
+    private static final int CONCURRENT_REQUEST_COUNT = 100;
 
     @Autowired
     private OrderService orderService;
@@ -89,13 +90,12 @@ class OrderServiceTest {
         public void order_concurrent100Request_Success() throws InterruptedException {
             Member member = memberRepository.save(MemberFixture.plainMemberFixture());
             Product product = productRepository.save(ProductFixture.productFixture());
-            int threadCount = 100;
             int processors = Runtime.getRuntime().availableProcessors();
             ExecutorService executorService = Executors.newFixedThreadPool(processors * 2);
 
-            CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+            CountDownLatch countDownLatch = new CountDownLatch(CONCURRENT_REQUEST_COUNT);
 
-            for (int i = 0; i < threadCount; i++) {
+            for (int i = 0; i < CONCURRENT_REQUEST_COUNT; i++) {
                 executorService.submit(() -> {
                     try {
                         orderService.orderProduct(member.getId(), product.getId());
@@ -111,7 +111,7 @@ class OrderServiceTest {
 
             await()
                     .atMost(5, TimeUnit.SECONDS)
-                    .pollInterval(100, TimeUnit.MILLISECONDS)
+                    .pollInterval(CONCURRENT_REQUEST_COUNT, TimeUnit.MILLISECONDS)
                     .until(() -> {
                         Product p = productRepository.getProductById(product.getId());
                         return p.getQuantity() == 0;
@@ -124,17 +124,15 @@ class OrderServiceTest {
 
             // Redis 재고 확인
             String stockStr = redisTemplate.opsForValue().get(KEY_PREFIX + product.getId().toString());
-            assertNotNull(stockStr, "Redis의 재고가 null입니다.");
-            long redisStock = Long.parseLong(stockStr);
-
-            // 주문 수 확인
             long orderCount = orderRepository.count();
 
-            log.info("Redis 재고: {}", redisStock);
-            log.info("주문 수: {}", orderCount);
+            log.info("Redis 재고: {}, 주문 수: {}",
+                   stockStr != null ? stockStr : "NULL",
+                   orderCount);
 
-            assertEquals(0L, redisStock, "Redis 재고가 0이 아닙니다.");
-            assertEquals(100L, orderCount, "주문 수가 100개가 아닙니다.");
+            assertNotNull(stockStr, "Redis의 재고가 null입니다.");
+            assertEquals(0L, Long.parseLong(stockStr), "Redis 재고가 0이 아닙니다.");
+            assertEquals(CONCURRENT_REQUEST_COUNT, orderCount, "주문 수가 기대값과 다릅니다.");
         }
     }
 }
