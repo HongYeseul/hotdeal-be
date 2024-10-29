@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
-        Optional<Cookie> refreshTokenCookie = cookieProvider.getCookieByName(request, TokenType.REFRESH_TOKEN.name());
+        Optional<Cookie> refreshTokenCookie = cookieProvider.getCookieByName(request, TokenType.REFRESH_TOKEN);
 
         if (authorization != null && authorization.startsWith(BEARER_TOKEN_PREFIX)) {
             String accessToken = authorization.substring(BEARER_TOKEN_PREFIX.length());
