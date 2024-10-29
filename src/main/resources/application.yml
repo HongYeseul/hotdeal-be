@@ -19,6 +19,13 @@ spring:
     redis:
       repositories:
         enabled: false
+  kafka:
+    consumer:
+      bootstrap-servers: kafka.kafka.svc.cluster.local:9092
+      group-id: order-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 management:
   endpoints:
     web:
