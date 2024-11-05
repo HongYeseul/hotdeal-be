@@ -20,6 +20,8 @@ import org.testcontainers.utility.DockerImageName;
 import java.time.Duration;
 import java.util.Map;
 
+import static com.example.hot_deal.common.constants.KafkaConstants.PRODUCT_ORDER_TOPIC;
+
 
 @Slf4j
 @TestConfiguration
@@ -57,7 +59,7 @@ public class TestConfig {
 
     @Bean
     public NewTopic appliedUsersTopic() {
-        return TopicBuilder.name("applied-users")
+        return TopicBuilder.name(PRODUCT_ORDER_TOPIC)
                 .partitions(1)
                 .replicas(1)
                 .build();

@@ -52,7 +52,10 @@ public class MemberService {
      * 회원 정보 조회
      */
     public BaseMemberDTO findMemberById(Long id) {
-        final Member member = memberRepository.getMemberById(id);
-        return member.getBaseMemberDto();
+        return getMemberById(id).getBaseMemberDto();
+    }
+
+    public Member getMemberById(Long id) {
+        return memberRepository.getMemberById(id);
     }
 }
