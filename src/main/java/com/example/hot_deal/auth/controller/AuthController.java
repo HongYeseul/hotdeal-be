@@ -38,6 +38,7 @@ public class AuthController {
      * 로그아웃
      */
     @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "저장되어있는 쿠키를 제거한다.")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         authService.logout(request, response);
         return ResponseEntity.ok().build();
