@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,6 +23,9 @@ public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private UUID uuid;
 
     @Column(nullable = false)
     private String name;
@@ -35,11 +40,7 @@ public class Member extends BaseTimeEntity {
      * 멤버 회원 가입
      */
     public Member(String name, String email, String encodedPassword) {
-        this(null, name, email, encodedPassword);
-    }
-
-    public static Member makeAuthMember(Long id, String email) {
-        return new Member(id, "AUTH", email, "PASSWORD");
+        this(null, UUID.randomUUID(), name, email, encodedPassword);
     }
 
     public BaseMemberDTO getBaseMemberDto() {
