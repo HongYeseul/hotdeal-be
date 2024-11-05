@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.hot_deal.common.constants.KafkaConstants.PRODUCT_ORDER_GROUP_ID;
+import static com.example.hot_deal.common.constants.KafkaConstants.PRODUCT_ORDER_TOPIC;
+
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -23,7 +27,7 @@ public class PurchasedUserOrderConsumer {
     private final ProductRepository productRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    @KafkaListener(topics = "applied-users", groupId = "order-group")
+    @KafkaListener(topics = PRODUCT_ORDER_TOPIC, groupId = PRODUCT_ORDER_GROUP_ID)
     public void processOrder(String message) {
         PurchasedRequest request = PurchasedRequest.from(message);
 

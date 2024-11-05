@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Repository;
 
+import static com.example.hot_deal.common.constants.KafkaConstants.PRODUCT_ORDER_TOPIC;
+
 @Repository
 @RequiredArgsConstructor
 public class PurchasedUserRepository {
@@ -13,6 +15,6 @@ public class PurchasedUserRepository {
     public void purchase(Long userId, Long productId) {
         String key = userId.toString();
         String value = userId + ":" + productId;
-        kafkaTemplate.send("applied-users", key, value);
+        kafkaTemplate.send(PRODUCT_ORDER_TOPIC, key, value);
     }
 }
