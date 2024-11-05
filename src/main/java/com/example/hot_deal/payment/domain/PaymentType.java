@@ -1,4 +1,4 @@
-package com.example.hot_deal.order.domain.payment;
+package com.example.hot_deal.payment.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
