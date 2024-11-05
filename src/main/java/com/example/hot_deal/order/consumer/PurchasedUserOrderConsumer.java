@@ -1,11 +1,6 @@
 package com.example.hot_deal.order.consumer;
 
-import com.example.hot_deal.order.domain.entity.Order;
-import com.example.hot_deal.order.domain.repository.OrderRepository;
-import com.example.hot_deal.product.domain.entity.Product;
-import com.example.hot_deal.member.domain.entity.Member;
-import com.example.hot_deal.member.domain.repository.MemberRepository;
-import com.example.hot_deal.product.domain.repository.ProductRepository;
+import com.example.hot_deal.order.service.OrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,23 +17,18 @@ import static com.example.hot_deal.common.constants.KafkaConstants.PRODUCT_ORDER
 @AllArgsConstructor
 public class PurchasedUserOrderConsumer {
 
-    private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
+    private final OrderService orderService;
 
+    /**
+     * KafkaConsumer: 제품 구매
+     * orderService.processOrderRequest 메서드 요청
+     * @param message 카프카 메시지(memberId:productId)
+     */
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @KafkaListener(topics = PRODUCT_ORDER_TOPIC, groupId = PRODUCT_ORDER_GROUP_ID)
     public void processOrder(String message) {
         PurchasedRequest request = PurchasedRequest.from(message);
-
-        Member member = memberRepository.getMemberById(request.getMemberId());
-        Product product = productRepository.getProductById(request.getProductId());
-
-        product.decreaseQuantity();
-        productRepository.save(product);
-
-        orderRepository.save(new Order(member, product.getName()));
-
+        orderService.processOrderRequest(request);
         log.info("사용자 {}의 주문이 DB에 저장되었습니다.", request.getMemberId());
     }
 }
