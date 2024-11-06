@@ -1,20 +1,17 @@
 package com.example.hot_deal.payment.domain;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
+/**
+ * 토스 기준 결제 상태
+ * @docs https://docs.tosspayments.com/reference#paymenttransactiondto-status
+ */
 public enum PaymentStatus {
-
-    PAYMENT_PENDING("결제 대기 중"),
-    PAYMENT_COMPLETED("결제 완료"),
-    PAYMENT_FAILED("결제 실패"),
-    REFUND_REQUESTED("환불 요청 중"),
-    REFUNDED("환불 완료");
-
-    private final String description;
-
+    READY,
+    IN_PROGRESS,
+    WAITING_FOR_DEPOSIT,
+    DONE,
+    CANCELED,
+    PARTIAL_CANCELED,
+    ABORTED,
+    EXPIRED
 }
 
