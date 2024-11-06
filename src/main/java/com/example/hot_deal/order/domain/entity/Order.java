@@ -40,15 +40,33 @@ public class Order extends BaseTimeEntity {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Column(nullable = false)
-    private String orderPreview;
+    private String orderName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    public Order(Member member, String orderPreview) {
+    @Column
+    private String deliveryMemo;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String detailAddress;
+
+    @Column(nullable = false)
+    private String zipcode;
+
+    @Column(nullable = false)
+    private String recipientName;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    public Order(Member member, String orderName) {
         this.member = member;
-        this.orderPreview = orderPreview;
+        this.orderName = orderName;
         this.orderStatus = OrderStatus.WAIT_FOR_PAYMENT;
     }
 }
