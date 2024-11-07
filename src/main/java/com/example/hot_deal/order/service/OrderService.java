@@ -6,6 +6,7 @@ import com.example.hot_deal.order.consumer.PurchasedRequest;
 import com.example.hot_deal.order.domain.entity.Order;
 import com.example.hot_deal.order.domain.repository.OrderRepository;
 import com.example.hot_deal.order.domain.repository.PurchasedUserRepository;
+import com.example.hot_deal.payment.service.PaymentService;
 import com.example.hot_deal.product.domain.entity.Product;
 import com.example.hot_deal.product.domain.repository.redis.ProductCountRepository;
 import com.example.hot_deal.product.domain.repository.ProductRepository;
@@ -24,6 +25,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberService memberService;
+    private final PaymentService paymentService;
 
     /**
      * 물건 구매 요청
@@ -49,6 +51,9 @@ public class OrderService {
     public void processOrderRequest(PurchasedRequest request) {
         Member member = memberService.getMemberById(request.getMemberId());
         Product product = productRepository.getProductById(request.getProductId());
+
+        // 결제 로직
+        paymentService.processPayment(member, product);
 
         product.decreaseQuantity();
         productRepository.save(product);

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.hot_deal.common.constants.KafkaConstants.CONSUMER_GROUP_ID;
+import static com.example.hot_deal.common.constants.KafkaConstants.KAFKA_BOOTSTRAP_SERVERS;
 
 @Configuration
 public class KafkaConsumerConfig {
@@ -20,7 +21,7 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
 
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BOOTSTRAP_SERVERS);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP_ID);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);

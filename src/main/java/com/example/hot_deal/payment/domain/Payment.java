@@ -1,7 +1,8 @@
-package com.example.hot_deal.order.domain.payment;
+package com.example.hot_deal.payment.domain;
 
 import com.example.hot_deal.common.domain.BaseTimeEntity;
 import com.example.hot_deal.common.domain.Price;
+import com.example.hot_deal.member.domain.entity.Member;
 import com.example.hot_deal.order.domain.entity.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -34,20 +35,29 @@ public class Payment extends BaseTimeEntity {
     private Order order;
 
     @Embedded
-    private Price totalPrice;
+    private PaymentKey paymentKey;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paid_member_id")
+    private Member paidMember;
+
+    @Embedded
+    private Price totalAmount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;        // 결제 유형 (카드, 포인트 등)
+    private PaymentType method;     // 결제 유형 (카드, 가상계좌, 간편결제 등)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;    // 결제 상태
+    private PaymentStatus status;   // 결제 상태
 
-    public Payment(Order order, Price totalPrice, PaymentType type) {
+    public Payment(Order order, Member member, Price totalAmount, PaymentType type, PaymentStatus status) {
         this.order = order;
-        this.totalPrice = totalPrice;
-        this.paymentType = type;
-        this.paymentStatus = PaymentStatus.PAYMENT_PENDING;
+        this.paymentKey = new PaymentKey();
+        this.paidMember = member;
+        this.totalAmount = totalAmount;
+        this.method = type;
+        this.status = status;
     }
 }

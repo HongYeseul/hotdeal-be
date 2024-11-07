@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,15 +41,34 @@ public class Order extends BaseTimeEntity {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Column(nullable = false)
-    private String orderPreview;
+    private String orderName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    public Order(Member member, String orderPreview) {
+    @Column
+    private String deliveryMemo;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String detailAddress;
+
+    @Column(nullable = false)
+    private String zipcode;
+
+    @Column(nullable = false)
+    private String recipientName;
+
+    @Column(nullable = false)
+    @Pattern(regexp = "^\\d{10,11}$", message = "전화번호는 10~11자리 숫자여야 합니다.")
+    private String phoneNumber;
+
+    public Order(Member member, String orderName) {
         this.member = member;
-        this.orderPreview = orderPreview;
+        this.orderName = orderName;
         this.orderStatus = OrderStatus.WAIT_FOR_PAYMENT;
     }
 }
