@@ -20,8 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,9 +37,9 @@ public class Payment extends BaseTimeEntity {
     @Embedded
     private PaymentKey paymentKey;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member payedMember;
+    @JoinColumn(name = "paid_member_id")
+    private Member paidMember;
 
     @Embedded
     private Price totalAmount;
@@ -56,8 +54,8 @@ public class Payment extends BaseTimeEntity {
 
     public Payment(Order order, Member member, Price totalAmount, PaymentType type, PaymentStatus status) {
         this.order = order;
-        this.paymentKey = new PaymentKey(UUID.randomUUID());
-        this.payedMember = member;
+        this.paymentKey = new PaymentKey();
+        this.paidMember = member;
         this.totalAmount = totalAmount;
         this.method = type;
         this.status = status;
