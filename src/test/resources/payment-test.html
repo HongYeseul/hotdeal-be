@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <!-- SDK 추가 -->
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+</head>
+
+<body>
+<!-- 결제하기 버튼 -->
+<button class="button" style="margin-top: 30px" onclick="requestPayment()">결제하기</button>
+<script>
+    // ------  SDK 초기화 ------
+    // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
+    // 토스에 등록된 상점(개발자) 정보
+    const clientKey = "test_ck_GjLJoQ1aVZyZYXXNPgmW3w6KYe2R";
+    // 구매자 식별하는 고유 아이디: UUID와 같이 고유한 값으로 설정
+    const customerKey = "B2FFF364-3222-4C6E-9021-19126FE358BC";
+
+    // 토스 결제 서비스 사용하기 위한 상점 정보 주입
+    const tossPayments = TossPayments(clientKey);
+    // 회원 결제
+    // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+    const payment = tossPayments.payment({ customerKey });
+    // 비회원 결제
+    // const payment = tossPayments.payment({customerKey: TossPayments.ANONYMOUS})
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
+    async function requestPayment() {
+        // 결제를 요청하기 전에 orderId, amount를 서버에 저장 해둬야 함
+        // -> 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도
+        await payment.requestPayment({
+            method: "CARD", // 카드 결제
+            amount: {
+                currency: "KRW",
+                value: 10, // 일반 결제는 KRW만, 해외 간편 결제는 USD만 지원
+            },
+            orderId: "575588D9-884F-46AC-85A3-76D306F8F15A",
+            orderName: "토스 티셔츠 외 2건", // 최대 길이 100자
+            successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+            failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+            customerEmail: "yeseul.dev@gmail.com", // 결제 상태가 바뀌면 이메일 주소로 결제 내역 전송
+            customerName: "홍예슬",
+            customerMobilePhone: "01012341234",
+            // 카드 결제에 필요한 정보
+            card: {
+                useEscrow: false,
+                flowMode: "DEFAULT", // 통합결제창 여는 옵션
+                useCardPoint: false,
+                useAppCardOnly: false,
+            },
+        });
+    }
+</script>
+</body>
+</html>
